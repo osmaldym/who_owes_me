@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:who_owes_me/screens/home_page.dart';
+import 'package:who_owes_me/screens/pay_page.dart';
+import 'package:who_owes_me/screens/user_page.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({
@@ -10,13 +13,13 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   // This list stores the screens for each tab
   final List<Widget> _screens = [
-    Center(child: Text('Pay Screen')),
-    Center(child: Text('Home Screen')),
-    Center(child: Text('User Screen')),
+    PayPage(),
+    HomePage(),
+    UserPage(),
   ];
 
   @override
