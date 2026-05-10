@@ -27,7 +27,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Hello World')),
+      appBar: AppBar(title: const Text('Who Owes Me')),
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) => setState(() {
