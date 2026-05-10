@@ -19,9 +19,9 @@ class _MainPageState extends State<MainPage> {
 
   // This list stores the screens for each tab
   final List<Widget> _screens = [
-    PayPage(),
-    HomePage(),
     UserPage(),
+    HomePage(),
+    DuePage(),
   ];
 
   @override
@@ -42,16 +42,16 @@ class _MainPageState extends State<MainPage> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.money),
-            label: 'Pays',
+            icon: Icon(Icons.person),
+            label: 'Users',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Users',
+            icon: Icon(Icons.money),
+            label: 'Pays',
           ),
         ],
       ),
