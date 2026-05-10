@@ -13,6 +13,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+
+  final PageController _pageController = PageController(initialPage: 1);
   int _selectedIndex = 1;
 
   // This list stores the screens for each tab
@@ -26,13 +28,17 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Hello World')),
-      body: _screens[_selectedIndex],
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) => setState(() {
+          _selectedIndex = index;
+        }),
+        children: _screens,
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex, // Highlight the selected tab
+        currentIndex: _selectedIndex,
         onTap: (index) {
-          setState(() {
-            _selectedIndex = index; // Update selected index
-          });
+          _pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
         },
         items: const [
           BottomNavigationBarItem(
