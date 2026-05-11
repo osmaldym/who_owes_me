@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:who_owes_me/router/route.dart' as app;
 import 'package:who_owes_me/screens/home_page.dart';
 import 'package:who_owes_me/screens/pay_page.dart';
 import 'package:who_owes_me/screens/user_page.dart';
@@ -60,7 +62,7 @@ class _MainPageState extends State<MainPage> {
         onPressed: () {
           switch (_selectedIndex) {
             case 0:
-              print("New user...");
+              context.push(app.Route.usersNew);
               break;
             case 2:
               print("New pay...");

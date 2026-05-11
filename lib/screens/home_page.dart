@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:who_owes_me/router/route.dart' as app;
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,7 +38,7 @@ class _HomePageState extends State<HomePage> {
                 RawChip(
                   avatar: const Icon(Icons.person),
                   label: const Text('New user'),
-                  onPressed: () => print('New user'),
+                  onPressed: () => context.push(app.Route.usersNew),
                 ),
                 RawChip(
                   avatar: const Icon(Icons.money),
