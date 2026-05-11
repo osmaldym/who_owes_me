@@ -55,6 +55,19 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
       ),
+      floatingActionButton: _selectedIndex == 1 ? null : FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          switch (_selectedIndex) {
+            case 0:
+              print("New user...");
+              break;
+            case 2:
+              print("New pay...");
+              break;
+          }
+        }
+      ),
     );
   }
 }
