@@ -65,7 +65,7 @@ class _MainPageState extends State<MainPage> {
               context.push(app.Route.usersNew);
               break;
             case 2:
-              print("New pay...");
+              context.push(app.Route.paysNew);
               break;
           }
         }
