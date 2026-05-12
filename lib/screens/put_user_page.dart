@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:who_owes_me/db/dao.dart';
+import 'package:who_owes_me/models/user.dart';
 
 class PutUserPage extends StatefulWidget {
   PutUserPage({
@@ -11,6 +14,13 @@ class PutUserPage extends StatefulWidget {
 }
 
 class _PutUserPageState extends State<PutUserPage> {
+  Dao _dao = Dao();
+  bool _loading = false;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,18 +35,21 @@ class _PutUserPageState extends State<PutUserPage> {
               decoration: const InputDecoration(
                 labelText: 'Name'
               ),
+              controller: _nameController,
             ),
             TextFormField(
               decoration: const InputDecoration(
                 labelText: 'Email'
               ),
               keyboardType: TextInputType.emailAddress,
+              controller: _emailController,
             ),
             TextFormField(
               decoration: const InputDecoration(
                 labelText: 'Phone number'
               ),
               keyboardType: TextInputType.phone,
+              controller: _phoneController,
             ),
           ],
         ),
@@ -46,8 +59,22 @@ class _PutUserPageState extends State<PutUserPage> {
         Padding(
           padding: EdgeInsetsGeometry.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: FilledButton(
-            onPressed: (){},
-            child: const Text('Save')
+            onPressed: _loading ? null : () async {
+              setState(() { _loading = true; });
+
+              User user = User(
+                name: _nameController.text,
+                email: _emailController.text,
+                phone: _phoneController.text,
+              );
+
+              int insertedRows = await _dao.putUser(user);
+
+              if (insertedRows > 0 && context.mounted) context.pop();
+
+              setState(() { _loading = false; });
+            },
+            child: _loading ? const CircularProgressIndicator() : const Text('Save')
           ),
         )
       ],
