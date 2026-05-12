@@ -1,5 +1,8 @@
 import 'package:sqflite/sql.dart';
 import 'package:who_owes_me/db/db.dart';
+import 'package:who_owes_me/db/table.dart';
+import 'package:who_owes_me/models/user.dart';
+import 'package:who_owes_me/utils/DBConvertions.dart';
 
 class Dao {
   DB _db = DB();
@@ -23,4 +26,6 @@ class Dao {
 
   Future<int> delete(String tableName, int id) async =>
     await (await _db.get()).delete(tableName, where: 'id = ?', whereArgs: [id]);
+
+  Future<int> putUser(User user) => put(DBTable.user, user.toMap());
 }
