@@ -28,10 +28,14 @@ class Dao {
   Future<int> delete(String tableName, int id) async =>
     await (await _db.get()).delete(tableName, where: 'id = ?', whereArgs: [id]);
 
+  // Users
+
   Future<int> putUser(User user) => put(DBTable.user, user.toMap());
   
   Future<List<User>> getAllUsers() async => DBConvertions.responseToUserList(await getAll(DBTable.user));
 
+  // Pays
+  
   Future<int> putPay(Pay pay) => put(DBTable.pay, pay.toMap());
   
   Future<List<Pay>> getAllPays() async => DBConvertions.responseToPayList(await getAll(DBTable.pay));
