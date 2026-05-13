@@ -33,4 +33,6 @@ class Dao {
   Future<List<User>> getAllUsers() async => DBConvertions.responseToUserList(await getAll(DBTable.user));
 
   Future<int> putPay(Pay pay) => put(DBTable.pay, pay.toMap());
+  
+  Future<List<Pay>> getAllPays() async => DBConvertions.responseToPayList(await getAll(DBTable.pay));
 }
