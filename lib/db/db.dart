@@ -14,6 +14,16 @@ class DB {
       phone TEXT
     )
   """,
+  """
+    CREATE TABLE ${DBTable.pay} (
+      id INTEGER PRIMARY KEY,
+      user_id INTEGER,
+      title TEXT,
+      amount REAL,
+      date INTEGER,
+      FOREIGN KEY (user_id) REFERENCES ${DBTable.user} (id)
+    )
+  """
   ];
 
   Future<Database> get() async {
