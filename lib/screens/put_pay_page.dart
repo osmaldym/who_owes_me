@@ -76,13 +76,15 @@ class _PutPayPageState extends State<PutPayPage> {
                 
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                   List<User>? users = snapshot.data;
-                  usersEmpty = users!.isEmpty;
+
+                  if (users?.length == 1) _selectedUser = users?.first;
 
                   return DropdownButtonFormField(
                     decoration: const InputDecoration(
                       labelText: 'Debtor',
                     ),
-                    items: users.map<DropdownMenuItem<User>>((User user) => DropdownMenuItem(
+                    initialValue: _selectedUser,
+                    items: users?.map<DropdownMenuItem<User>>((User user) => DropdownMenuItem(
                       value: user,
                       child: Text(user.name ?? 'Unknown user')
                     )).toList(),
@@ -105,6 +107,7 @@ class _PutPayPageState extends State<PutPayPage> {
               ),
               controller: _date,
               onTap: _pickDate,
+              readOnly: true,
             ),
           ],
         ),
