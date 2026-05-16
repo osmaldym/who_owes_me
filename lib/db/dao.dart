@@ -2,6 +2,7 @@ import 'package:sqflite/sql.dart';
 import 'package:who_owes_me/db/db.dart';
 import 'package:who_owes_me/db/table.dart';
 import 'package:who_owes_me/models/pay.dart';
+import 'package:who_owes_me/models/realated_pay.dart';
 import 'package:who_owes_me/models/user.dart';
 import 'package:who_owes_me/utils/DBConvertions.dart';
 
@@ -39,4 +40,19 @@ class Dao {
   Future<int> putPay(Pay pay) => put(DBTable.pay, pay.toMap());
   
   Future<List<Pay>> getAllPays() async => DBConvertions.responseToPayList(await getAll(DBTable.pay));
+
+  // Related pays
+
+  Future<RelatedPay> _toRelatedPay(Pay pay) async => RelatedPay(
+    id: pay.id,
+    title: pay.title,
+    amount: pay.amount,
+    date: pay.date,
+    userId: pay.userId,
+    user: DBConvertions.responseToUser((await getById(DBTable.user, pay.userId!)).first),
+  );
+
+  Future<List<RelatedPay>> _toRelatedPays(List<Pay> pays) async => [
+    for (final pay in pays) await _toRelatedPay(pay)
+  ];
 }
