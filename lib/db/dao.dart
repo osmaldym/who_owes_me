@@ -65,7 +65,7 @@ class Dao {
   }
 
   Future<List<RelatedPay>> getNextPays() async {
-     List<Map<String, Object?>> payMaps = (await (await _db.get()).query(DBTable.pay, limit: 5, orderBy: "date DESC"));
+    List<Map<String, Object?>> payMaps = (await (await _db.get()).query(DBTable.pay, limit: 5, orderBy: "date ASC", where: "date != ?", whereArgs: ['null']));
     List<Pay> payList = DBConvertions.responseToPayList(payMaps);
     return _toRelatedPays(payList);
   }
