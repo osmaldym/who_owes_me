@@ -55,4 +55,33 @@ class Dao {
   Future<List<RelatedPay>> _toRelatedPays(List<Pay> pays) async => [
     for (final pay in pays) await _toRelatedPay(pay)
   ];
+
+  // Overviews
+
+  Future<double> getTotalDue() async {
+    List<Map<String, Object?>> pays = (await (await _db.get()).rawQuery("SELECT SUM(amount) as total_due FROM ${DBTable.pay}"));
+    if (pays.isNotEmpty) return pays.first['total_due'] as double;
+    return 0;
+  }
+
+  Future<List<RelatedPay>> getNextPays() async {
+     List<Map<String, Object?>> payMaps = (await (await _db.get()).query(DBTable.pay, limit: 5, orderBy: "date DESC"));
+    List<Pay> payList = DBConvertions.responseToPayList(payMaps);
+    return _toRelatedPays(payList);
+  }
+
+  Future<List<Map<String, Object?>>> getUsersOweMost() async {
+    List<Map<String, Object?>> userMaps = (await (await _db.get()).rawQuery("""
+      SELECT
+        u.*,
+        SUM(p.amount) as owe_total
+      FROM ${DBTable.pay} AS p
+      INNER JOIN ${DBTable.user} AS u ON u.id = p.user_id
+      GROUP BY u.id
+      ORDER BY owe_total DESC
+      LIMIT 5
+    """));
+
+    return userMaps;
+  }
 }
