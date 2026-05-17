@@ -15,16 +15,25 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final UserPage _userPage = UserPage();
+  final HomePage _homePage = HomePage();
+  final DuePage _duePage = DuePage();
 
   final PageController _pageController = PageController(initialPage: 1);
   int _selectedIndex = 1;
 
   // This list stores the screens for each tab
-  final List<Widget> _screens = [
-    UserPage(),
-    HomePage(),
-    DuePage(),
-  ];
+  List<Widget>? _screens;
+
+  @override
+  void initState() {
+    _screens = [
+      _userPage,
+      _homePage,
+      _duePage,
+    ];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +44,7 @@ class _MainPageState extends State<MainPage> {
         onPageChanged: (index) => setState(() {
           _selectedIndex = index;
         }),
-        children: _screens,
+        children: _screens!,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
@@ -62,10 +71,14 @@ class _MainPageState extends State<MainPage> {
         onPressed: () {
           switch (_selectedIndex) {
             case 0:
-              context.push(app.Route.usersNew);
+              context.push(app.Route.usersNew).then((_) {
+                _userPage.getState()!.updateState();
+              });
               break;
             case 2:
-              context.push(app.Route.paysNew);
+              context.push(app.Route.paysNew).then((_) {
+                _duePage.getState()!.updateState();
+              });
               break;
           }
         }

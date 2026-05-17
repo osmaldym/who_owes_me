@@ -4,12 +4,20 @@ import 'package:who_owes_me/models/pay.dart';
 import 'package:intl/intl.dart';
 
 class DuePage extends StatefulWidget {
+  _DuePageState? _state;
+
   DuePage({
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _DuePageState();
+  State<StatefulWidget> createState() {
+    _DuePageState state = _DuePageState();
+    _state = state;
+    return state;
+  }
+
+  _DuePageState? getState() => _state;
 }
 
 class _DuePageState extends State<DuePage> {
@@ -22,6 +30,12 @@ class _DuePageState extends State<DuePage> {
   void initState() {
     _getAllPays = _dao.getAllPays();
     super.initState();
+  }
+
+  void updateState() {
+    setState(() {
+      _getAllPays = _dao.getAllPays();
+    });
   }
 
   @override

@@ -3,15 +3,23 @@ import 'package:who_owes_me/db/dao.dart';
 import 'package:who_owes_me/models/user.dart';
 
 class UserPage extends StatefulWidget {
+  UserPageState? _state;
+  
   UserPage({
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _UserPageState();
+  State<StatefulWidget> createState() {
+   UserPageState state = UserPageState();
+   _state = state;
+   return state;
+  }
+
+  UserPageState? getState() => _state;
 }
 
-class _UserPageState extends State<UserPage> {
+class UserPageState extends State<UserPage> {
   Dao _dao = Dao();
 
   Future<List<User>>? _getAllUsers;
@@ -20,6 +28,12 @@ class _UserPageState extends State<UserPage> {
   void initState() {
     _getAllUsers = _dao.getAllUsers();
     super.initState();
+  }
+
+  void updateState() {
+    setState(() {
+      _getAllUsers = _dao.getAllUsers();
+    });
   }
 
   @override
@@ -44,19 +58,21 @@ class _UserPageState extends State<UserPage> {
                     fontSize: 24,
                   ),
                 ),
-                ListView.builder(
-                  itemCount: users?.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: const CircleAvatar(
-                        child: Icon(Icons.person),
-                      ),
-                      title: Text(users?[index].name ?? 'No name'),
-                      subtitle: Text(users?[index].email ?? 'No email'),
-                      onTap: (){},
-                    );
-                  }
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: users?.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: const CircleAvatar(
+                          child: Icon(Icons.person),
+                        ),
+                        title: Text(users?[index].name ?? 'No name'),
+                        subtitle: Text(users?[index].email ?? 'No email'),
+                        onTap: (){},
+                      );
+                    }
+                  ) 
                 )
               ],
             );

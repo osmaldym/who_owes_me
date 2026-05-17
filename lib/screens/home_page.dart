@@ -6,12 +6,20 @@ import 'package:who_owes_me/router/route.dart' as app;
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
+  _HomePageState? _state;
+
   HomePage({
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _HomePageState();
+  State<StatefulWidget> createState() {
+    _HomePageState state = _HomePageState();
+    _state = state;
+    return state;
+  }
+
+  _HomePageState? getState() => _state;
 }
 
 class _HomePageState extends State<HomePage> {
@@ -26,10 +34,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    refreshAllFutures();
+    super.initState();
+  }
+
+  void refreshAllFutures() {
     _totalDue = dao.getTotalDue();
     _nextPays = dao.getNextPays();
     _oweMost = dao.getUsersOweMost();
-    super.initState();
   }
 
   @override
@@ -71,7 +83,11 @@ class _HomePageState extends State<HomePage> {
                 RawChip(
                   avatar: const Icon(Icons.money),
                   label: const Text('New pay'),
-                  onPressed: () => context.push(app.Route.paysNew),
+                  onPressed: () => context.push(app.Route.paysNew).then((_) {
+                    setState(() {
+                      refreshAllFutures();
+                    });
+                  }),
                 ),
               ],
             ),
