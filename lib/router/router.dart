@@ -17,7 +17,7 @@ final router = GoRouter(
       builder: (context, state) => PutUserPage(user: state.extra as User?,),
     ),
     GoRoute(
-      path: Route.paysNew,
+      path: Route.paysPut,
       builder: (context, state) => PutPayPage(),
     )
   ]

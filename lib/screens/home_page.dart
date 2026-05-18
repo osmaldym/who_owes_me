@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                 RawChip(
                   avatar: const Icon(Icons.money),
                   label: const Text('New pay'),
-                  onPressed: () => context.push(app.Route.paysNew).then((_) {
+                  onPressed: () => context.push(app.Route.paysPut).then((_) {
                     setState(() {
                       refreshAllFutures();
                     });

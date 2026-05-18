@@ -76,7 +76,7 @@ class _MainPageState extends State<MainPage> {
               });
               break;
             case 2:
-              context.push(app.Route.paysNew).then((_) {
+              context.push(app.Route.paysPut).then((_) {
                 _duePage.getState()!.updateState();
               });
               break;
