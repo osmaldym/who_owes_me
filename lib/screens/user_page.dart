@@ -69,6 +69,35 @@ class UserPageState extends State<UserPage> {
                         ),
                         title: Text(users?[index].name ?? 'No name'),
                         subtitle: Text(users?[index].email ?? 'No email'),
+                        trailing: PopupMenuButton(
+                          icon: const Icon(Icons.more_horiz),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              child: TextButton(
+                                onPressed: () {},
+                                child: const Row(
+                                  spacing: 15,
+                                  children: [
+                                    Icon(Icons.edit),
+                                    Text('Edit')
+                                  ],
+                                ),
+                              )
+                            ),
+                            PopupMenuItem(
+                              child: TextButton(
+                                onPressed: () {},
+                                child: const Row(
+                                  spacing: 15,
+                                  children: [
+                                    Icon(Icons.delete),
+                                    Text('Delete')
+                                  ],
+                                ),
+                              )
+                            )
+                          ],
+                        ),
                         onTap: (){},
                       );
                     }

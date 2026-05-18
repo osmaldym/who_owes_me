@@ -52,6 +52,7 @@ class _DuePageState extends State<DuePage> {
                 fontSize: 24,
               ),
             ),
+
             FutureBuilder(
               future: _getAllPays,
               builder: (context, snapshot) {
@@ -69,7 +70,42 @@ class _DuePageState extends State<DuePage> {
                           child: Icon(Icons.money),
                         ),
                         title: Text(pays?[index].title ?? 'No Title'),
-                        trailing: Text('\$${pays?[index].amount ?? '0'}'),
+                        trailing: Row(
+                          spacing: 5,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('\$${pays?[index].amount ?? '0'}'),
+                            PopupMenuButton(
+                              icon: const Icon(Icons.more_horiz),
+                              itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  child: TextButton(
+                                    onPressed: () {},
+                                    child: const Row(
+                                      spacing: 15,
+                                      children: [
+                                        Icon(Icons.edit),
+                                        Text('Edit')
+                                      ],
+                                    ),
+                                  )
+                                ),
+                                PopupMenuItem(
+                                  child: TextButton(
+                                    onPressed: () {},
+                                    child: const Row(
+                                      spacing: 15,
+                                      children: [
+                                        Icon(Icons.delete),
+                                        Text('Delete')
+                                      ],
+                                    ),
+                                  )
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                         subtitle: Text(pays?[index].date != null ? format.format(pays![index].date!) : 'No date'),
                       );
                     }
