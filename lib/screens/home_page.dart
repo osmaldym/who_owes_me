@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                 RawChip(
                   avatar: const Icon(Icons.person),
                   label: const Text('New user'),
-                  onPressed: () => context.push(app.Route.usersNew),
+                  onPressed: () => context.push(app.Route.usersPut),
                 ),
                 RawChip(
                   avatar: const Icon(Icons.money),

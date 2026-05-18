@@ -12,7 +12,7 @@ final router = GoRouter(
       builder: (context, state) => MainPage(),
     ),
     GoRoute(
-      path: Route.usersNew,
+      path: Route.usersPut,
       builder: (context, state) => PutUserPage(),
     ),
     GoRoute(

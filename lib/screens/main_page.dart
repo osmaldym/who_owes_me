@@ -71,7 +71,7 @@ class _MainPageState extends State<MainPage> {
         onPressed: () {
           switch (_selectedIndex) {
             case 0:
-              context.push(app.Route.usersNew).then((_) {
+              context.push(app.Route.usersPut).then((_) {
                 _userPage.getState()!.updateState();
               });
               break;
