@@ -6,9 +6,11 @@ import 'package:who_owes_me/models/user.dart';
 import 'package:intl/intl.dart';
 
 class PutPayPage extends StatefulWidget {
+  Pay? pay;
+
   PutPayPage({
     super.key,
-    
+    this.pay,
   });
 
   @override
@@ -34,6 +36,13 @@ class _PutPayPageState extends State<PutPayPage> {
   @override
   void initState() {
     _getAllUsers = _dao.getAllUsers();
+
+    _selectedDate = widget.pay?.date;
+
+    _title.text = widget.pay?.title ?? '';
+    _amount.text = widget.pay?.amount != null ? widget.pay!.amount!.toString() : '';
+    _date.text = _selectedDate != null ? format.format(_selectedDate!) : '';
+
     super.initState();
   }
 
@@ -57,7 +66,7 @@ class _PutPayPageState extends State<PutPayPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New pay'),
+        title: Text('${ widget.pay != null ? 'Edit' : 'New' } pay'),
       ),
       body: Padding(
         padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
@@ -76,6 +85,10 @@ class _PutPayPageState extends State<PutPayPage> {
                 
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                   List<User>? users = snapshot.data;
+
+                  if (widget.pay?.userId != null && _selectedUser == null) {
+                    _selectedUser = users?.firstWhere((user) => user.id == widget.pay!.userId!);
+                  }
 
                   if (users?.length == 1) _selectedUser = users?.first;
 
@@ -120,7 +133,10 @@ class _PutPayPageState extends State<PutPayPage> {
             onPressed: usersEmpty ? null : () async {
               setState(() { _loading = true; });
 
+              print(_selectedUser);
+
               Pay pay = Pay(
+                id: widget.pay?.id,
                 title: _title.text,
                 userId: _selectedUser?.id,
                 date: _selectedDate,

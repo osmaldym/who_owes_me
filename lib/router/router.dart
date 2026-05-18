@@ -1,5 +1,6 @@
 
 import 'package:go_router/go_router.dart';
+import 'package:who_owes_me/models/pay.dart';
 import 'package:who_owes_me/models/user.dart';
 import 'package:who_owes_me/router/route.dart';
 import 'package:who_owes_me/screens/main_page.dart';
@@ -18,7 +19,7 @@ final router = GoRouter(
     ),
     GoRoute(
       path: Route.paysPut,
-      builder: (context, state) => PutPayPage(),
+      builder: (context, state) => PutPayPage(pay: state.extra as Pay?,),
     )
   ]
 );

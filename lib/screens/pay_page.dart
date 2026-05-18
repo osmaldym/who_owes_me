@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:who_owes_me/db/dao.dart';
 import 'package:who_owes_me/models/pay.dart';
 import 'package:intl/intl.dart';
+import 'package:who_owes_me/router/route.dart' as route;
 
 class DuePage extends StatefulWidget {
   _DuePageState? _state;
@@ -53,6 +55,20 @@ class _DuePageState extends State<DuePage> {
               ),
             ),
 
+            // Row(
+            //   spacing: 5,
+            //   children: [
+            //     RawChip(
+            //       selected: true,
+            //       label: const Text('Next pays'),
+            //       onPressed: () => print('New pay'),
+            //     ),
+            //     RawChip(
+            //       label: const Text('Paid'),
+            //       onPressed: () => print('New user'),
+            //     ),
+            //   ],
+            // ),
             FutureBuilder(
               future: _getAllPays,
               builder: (context, snapshot) {
@@ -80,7 +96,10 @@ class _DuePageState extends State<DuePage> {
                               itemBuilder: (context) => [
                                 PopupMenuItem(
                                   child: TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      context.pop();
+                                      context.push(route.Route.paysPut, extra: pays?[index]).then((_) => updateState());
+                                    },
                                     child: const Row(
                                       spacing: 15,
                                       children: [
