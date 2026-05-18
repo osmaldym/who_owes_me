@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:who_owes_me/db/dao.dart';
 import 'package:who_owes_me/models/user.dart';
+import 'package:who_owes_me/router/route.dart' as route;
 
 class UserPage extends StatefulWidget {
   UserPageState? _state;
@@ -74,7 +76,10 @@ class UserPageState extends State<UserPage> {
                           itemBuilder: (context) => [
                             PopupMenuItem(
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.pop();
+                                  context.push(route.Route.usersPut, extra: users?[index]).then((_) => updateState());
+                                },
                                 child: const Row(
                                   spacing: 15,
                                   children: [

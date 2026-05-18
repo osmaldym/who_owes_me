@@ -4,9 +4,11 @@ import 'package:who_owes_me/db/dao.dart';
 import 'package:who_owes_me/models/user.dart';
 
 class PutUserPage extends StatefulWidget {
+  User? user;
+
   PutUserPage({
     super.key,
-    
+    this.user,
   });
 
   @override
@@ -14,7 +16,7 @@ class PutUserPage extends StatefulWidget {
 }
 
 class _PutUserPageState extends State<PutUserPage> {
-  Dao _dao = Dao();
+  final Dao _dao = Dao();
   bool _loading = false;
 
   final TextEditingController _nameController = TextEditingController();
@@ -22,13 +24,21 @@ class _PutUserPageState extends State<PutUserPage> {
   final TextEditingController _phoneController = TextEditingController();
 
   @override
+  void initState() {
+    _nameController.text = widget.user?.name ?? '';
+    _emailController.text = widget.user?.email ?? '';
+    _phoneController.text = widget.user?.phone ?? '';
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New user'),
+        title: Text('${ widget.user != null ? 'Edit' : 'New' } user'),
       ),
       body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
+        padding: const EdgeInsetsGeometry.symmetric(horizontal: 15),
         child:  Column(
           children: [
             TextFormField(
@@ -63,6 +73,7 @@ class _PutUserPageState extends State<PutUserPage> {
               setState(() { _loading = true; });
 
               User user = User(
+                id: widget.user?.id,
                 name: _nameController.text,
                 email: _emailController.text,
                 phone: _phoneController.text,
