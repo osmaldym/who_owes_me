@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:who_owes_me/db/dao.dart';
 import 'package:who_owes_me/models/user.dart';
 import 'package:who_owes_me/router/route.dart' as route;
+import 'package:who_owes_me/widgets/no_data_info.dart';
 
 class UserPage extends StatefulWidget {
   UserPageState? _state;
@@ -42,25 +43,27 @@ class UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsetsGeometry.symmetric(horizontal: 15),
-      child: FutureBuilder(
-        future: _getAllUsers,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-          
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-            List<User>? users = snapshot.data;
+      child: Column(
+        spacing: 5,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Users',
+            style: TextStyle(
+              fontSize: 24,
+            ),
+          ),
+          FutureBuilder(
+            future: _getAllUsers,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+              
+              if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                List<User>? users = snapshot.data;
 
-            return Column(
-              spacing: 5,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Users',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-                Expanded(
+                if (users != null && users.isEmpty) return NoDataInfo(text: 'No users to show', icon: Icons.person,);
+
+                return Expanded(
                   child: ListView.builder(
                     itemCount: users?.length,
                     shrinkWrap: true,
@@ -135,15 +138,15 @@ class UserPageState extends State<UserPage> {
                       );
                     }
                   ) 
-                )
-              ],
-            );
-          }
+                );
+              }
 
 
-          return Text('No users to show');
-        }
-      ),
+              return NoDataInfo(text: 'No users to show', icon: Icons.person);
+            }
+          ),
+        ],
+      )
     );
   }
 }
