@@ -1,3 +1,4 @@
+import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sql.dart';
 import 'package:who_owes_me/db/db.dart';
 import 'package:who_owes_me/db/table.dart';
@@ -14,8 +15,11 @@ class Dao {
   Future<List<Map<String, Object?>>> getById(String tableName, int id) async =>
     (await (await _db.get()).query(tableName, where: 'id = ?', whereArgs: [id]));
 
-  Future<List<Map<String, Object?>>> getAll(String tableName) async =>
-    await (await _db.get()).query(tableName);
+  Future<List<Map<String, Object?>>> getAll(String tableName, { bool deleted = false }) async {
+    Database db = await _db.get();
+    if (!deleted) return await db.query(tableName, where: "deleted_at IS NULL");
+    return await db.query(tableName);
+  }
 
   Future<int> put(String tableName, Map<String, Object?> data) async =>
     await (await _db.get()).insert(tableName, data, conflictAlgorithm: ConflictAlgorithm.replace);
@@ -29,17 +33,28 @@ class Dao {
   Future<int> delete(String tableName, int id) async =>
     await (await _db.get()).delete(tableName, where: 'id = ?', whereArgs: [id]);
 
+  Future<int> softDelete(String tableName, int id, { String softDeleteField = 'deleted_at', String whereField = 'id' }) async =>
+    await (await _db.get()).update(tableName, { softDeleteField: DateTime.now().microsecondsSinceEpoch }, where: '$whereField = ?', whereArgs: [id]);
+
   // Users
 
   Future<int> putUser(User user) => put(DBTable.user, user.toMap());
   
   Future<List<User>> getAllUsers() async => DBConvertions.responseToUserList(await getAll(DBTable.user));
 
+  Future<int> softDeleteUser(int id) async {
+    int deletedUsers = await softDelete(DBTable.user, id);
+    if (deletedUsers > 0) await softDelete(DBTable.pay, id, whereField: "user_id");
+    return deletedUsers;
+  }
+
   // Pays
   
   Future<int> putPay(Pay pay) => put(DBTable.pay, pay.toMap());
   
   Future<List<Pay>> getAllPays() async => DBConvertions.responseToPayList(await getAll(DBTable.pay));
+
+  Future<int> softDeletePay(int id) async => softDelete(DBTable.pay, id);
 
   // Related pays
 
@@ -59,13 +74,13 @@ class Dao {
   // Overviews
 
   Future<double> getTotalDue() async {
-    List<Map<String, Object?>> pays = (await (await _db.get()).rawQuery("SELECT SUM(amount) as total_due FROM ${DBTable.pay}"));
+    List<Map<String, Object?>> pays = (await (await _db.get()).rawQuery("SELECT SUM(amount) as total_due FROM ${DBTable.pay} WHERE deleted_at IS NULL"));
     if (pays.isNotEmpty) return pays.first['total_due'] as double;
     return 0;
   }
 
   Future<List<RelatedPay>> getNextPays() async {
-    List<Map<String, Object?>> payMaps = (await (await _db.get()).query(DBTable.pay, limit: 5, orderBy: "date ASC", where: "date != ?", whereArgs: ['null']));
+    List<Map<String, Object?>> payMaps = (await (await _db.get()).query(DBTable.pay, limit: 5, orderBy: "date ASC", where: "date IS NOT NULL AND deleted_at IS NULL"));
     List<Pay> payList = DBConvertions.responseToPayList(payMaps);
     return _toRelatedPays(payList);
   }
@@ -77,6 +92,7 @@ class Dao {
         SUM(p.amount) as owe_total
       FROM ${DBTable.pay} AS p
       INNER JOIN ${DBTable.user} AS u ON u.id = p.user_id
+      WHERE p.deleted_at IS NULL AND u.deleted_at IS NULL
       GROUP BY u.id
       ORDER BY owe_total DESC
       LIMIT 5
