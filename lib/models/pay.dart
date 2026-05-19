@@ -12,6 +12,7 @@ class Pay extends BaseModel {
     this.title,
     this.amount,
     this.date,
+    super.deletedAt,
   });
 
   @override

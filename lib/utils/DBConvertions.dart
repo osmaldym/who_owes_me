@@ -7,11 +7,14 @@ class DBConvertions {
   }
 
   static User responseToUser(Map<String, Object?> response) {
+     int? deletedAt = response['deleted_at'] as int?;
+
     return User(
       id: response['id'] as int,
       name: response['name'] as String?,
       email: response['email'] as String?,
       phone: response['phone'] as String?,
+      deletedAt: deletedAt == null ? null : DateTime.fromMicrosecondsSinceEpoch(deletedAt),
     );
   }
 
@@ -21,6 +24,7 @@ class DBConvertions {
 
   static Pay responseToPay(Map<String, Object?> response) {
     int? date = response['date'] as int?;
+    int? deletedAt = response['deleted_at'] as int?;
 
     return Pay(
       id: response['id'] as int,
@@ -28,6 +32,7 @@ class DBConvertions {
       title: response['title'] as String?,
       amount: response['amount'] as double?,
       date: date == null ? null : DateTime.fromMicrosecondsSinceEpoch(date),
+      deletedAt: deletedAt == null ? null : DateTime.fromMicrosecondsSinceEpoch(deletedAt),
     );
   }
 }

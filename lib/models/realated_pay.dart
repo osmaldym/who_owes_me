@@ -10,6 +10,7 @@ class RelatedPay extends Pay {
     super.title,
     super.amount,
     super.date,
+    super.deletedAt,
     this.user,
   });
 

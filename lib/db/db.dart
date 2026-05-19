@@ -11,7 +11,8 @@ class DB {
       id INTEGER PRIMARY KEY,
       name TEXT,
       email TEXT,
-      phone TEXT
+      phone TEXT,
+      deleted_at INTEGER
     )
   """,
   """
@@ -21,6 +22,7 @@ class DB {
       title TEXT,
       amount REAL,
       date INTEGER,
+      deleted_at INTEGER,
       FOREIGN KEY (user_id) REFERENCES ${DBTable.user} (id)
     )
   """

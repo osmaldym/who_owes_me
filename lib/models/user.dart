@@ -9,7 +9,8 @@ class User extends BaseModel {
     super.id,
     this.email,
     this.name,
-    this.phone
+    this.phone,
+    super.deletedAt,
   });
 
   @override
