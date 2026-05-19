@@ -91,7 +91,35 @@ class UserPageState extends State<UserPage> {
                             ),
                             PopupMenuItem(
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.pop();
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                    title: const Text("Are you sure?"),
+                                      content: Text("Are you sure to delete the user \"${ users?[index].name ?? '' }\"? His dues will be deleted too and this action cannot be undone."),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => context.pop(),
+                                          child: const Text('No')
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            int deletedItems = await _dao.softDeleteUser(users![index].id!);
+                                            if (deletedItems > 0) updateState();
+                                            if (context.mounted) context.pop();
+                                          },
+                                          child: const Text(
+                                            'Yes',
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                            ),
+                                          )
+                                        )
+                                      ],
+                                    )
+                                  );
+                                },
                                 child: const Row(
                                   spacing: 15,
                                   children: [

@@ -54,21 +54,6 @@ class _DuePageState extends State<DuePage> {
                 fontSize: 24,
               ),
             ),
-
-            // Row(
-            //   spacing: 5,
-            //   children: [
-            //     RawChip(
-            //       selected: true,
-            //       label: const Text('Next pays'),
-            //       onPressed: () => print('New pay'),
-            //     ),
-            //     RawChip(
-            //       label: const Text('Paid'),
-            //       onPressed: () => print('New user'),
-            //     ),
-            //   ],
-            // ),
             FutureBuilder(
               future: _getAllPays,
               builder: (context, snapshot) {
@@ -111,7 +96,35 @@ class _DuePageState extends State<DuePage> {
                                 ),
                                 PopupMenuItem(
                                   child: TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      context.pop();
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                        title: const Text("Are you sure?"),
+                                          content: Text("Are you sure to delete the pay \"${ pays?[index].title ?? '' }\"? This action cannot be undone."),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => context.pop(),
+                                              child: const Text('No')
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                int deletedItems = await _dao.softDeletePay(pays![index].id!);
+                                                if (deletedItems > 0) updateState();
+                                                if (context.mounted) context.pop();
+                                              },
+                                              child: const Text(
+                                                'Yes',
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                ),
+                                              )
+                                            )
+                                          ],
+                                        )
+                                      );
+                                    },
                                     child: const Row(
                                       spacing: 15,
                                       children: [
