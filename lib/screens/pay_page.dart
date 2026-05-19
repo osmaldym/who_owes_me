@@ -4,6 +4,7 @@ import 'package:who_owes_me/db/dao.dart';
 import 'package:who_owes_me/models/pay.dart';
 import 'package:intl/intl.dart';
 import 'package:who_owes_me/router/route.dart' as route;
+import 'package:who_owes_me/widgets/no_data_info.dart';
 
 class DuePage extends StatefulWidget {
   _DuePageState? _state;
@@ -61,6 +62,8 @@ class _DuePageState extends State<DuePage> {
                 
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                   List<Pay>? pays = snapshot.data;
+
+                  if (pays != null && pays.isEmpty) return NoDataInfo(text: 'No pays to show');
 
                   return ListView.builder(
                     itemCount: pays?.length,
@@ -144,7 +147,7 @@ class _DuePageState extends State<DuePage> {
                   );
                 }
 
-                return Text('No pays to show');
+                return NoDataInfo(text: 'No pays to show');
               }
             ),
           ]
