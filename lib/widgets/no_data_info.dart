@@ -5,6 +5,7 @@ class NoDataInfo extends StatelessWidget {
   String? message;
   bool showMessage;
   IconData? icon;
+  EdgeInsetsGeometry? padding; 
 
   NoDataInfo({
     super.key,
@@ -12,13 +13,14 @@ class NoDataInfo extends StatelessWidget {
     this.message,
     this.icon,
     this.showMessage = true,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsetsGeometry.symmetric(horizontal: 15),
+        padding: padding ?? const EdgeInsetsGeometry.symmetric(horizontal: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
