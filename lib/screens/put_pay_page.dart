@@ -86,6 +86,10 @@ class _PutPayPageState extends State<PutPayPage> {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                   List<User>? users = snapshot.data;
 
+                  /**
+                   * This cannot be refactorized because the instances of imaginary RelatedPay will be different of
+                   * the users array, throwing error if I can access to the instance of user in RelatedPay.
+                   */
                   if (widget.pay?.userId != null && _selectedUser == null) {
                     _selectedUser = users?.firstWhere((user) => user.id == widget.pay!.userId!);
                   }
@@ -126,30 +130,33 @@ class _PutPayPageState extends State<PutPayPage> {
         ),
       ),
       persistentFooterAlignment: AlignmentDirectional.center,
+      persistentFooterDecoration: const BoxDecoration(),
       persistentFooterButtons: [
         Padding(
           padding: EdgeInsetsGeometry.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: FilledButton(
-            onPressed: usersEmpty ? null : () async {
-              setState(() { _loading = true; });
+          child: Container(
+            width: double.maxFinite,
+            padding: const EdgeInsets.all(15),
+            child: FilledButton(
+              onPressed: usersEmpty ? null : () async {
+                setState(() { _loading = true; });
 
-              print(_selectedUser);
+                Pay pay = Pay(
+                  id: widget.pay?.id,
+                  title: _title.text,
+                  userId: _selectedUser?.id,
+                  date: _selectedDate,
+                  amount: double.parse(_amount.text),
+                );
 
-              Pay pay = Pay(
-                id: widget.pay?.id,
-                title: _title.text,
-                userId: _selectedUser?.id,
-                date: _selectedDate,
-                amount: double.parse(_amount.text),
-              );
+                int insertedRows = await _dao.putPay(pay);
+                
+                if (insertedRows > 0 && context.mounted) context.pop();
 
-              int insertedRows = await _dao.putPay(pay);
-              
-              if (insertedRows > 0 && context.mounted) context.pop();
-
-              setState(() { _loading = false; });
-            },
-            child: _loading ? const CircularProgressIndicator() : const Text('Save')
+                setState(() { _loading = false; });
+              },
+              child: _loading ? const CircularProgressIndicator() : const Text('Save')
+            )
           ),
         )
       ],

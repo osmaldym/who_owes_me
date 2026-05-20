@@ -65,27 +65,32 @@ class _PutUserPageState extends State<PutUserPage> {
         ),
       ),
       persistentFooterAlignment: AlignmentDirectional.center,
+      persistentFooterDecoration: const BoxDecoration(),
       persistentFooterButtons: [
         Padding(
           padding: EdgeInsetsGeometry.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: FilledButton(
-            onPressed: _loading ? null : () async {
-              setState(() { _loading = true; });
+          child: Container(
+            width: double.maxFinite,
+            padding: const EdgeInsets.all(15),
+            child: FilledButton(
+              onPressed: _loading ? null : () async {
+                setState(() { _loading = true; });
 
-              User user = User(
-                id: widget.user?.id,
-                name: _nameController.text,
-                email: _emailController.text,
-                phone: _phoneController.text,
-              );
+                User user = User(
+                  id: widget.user?.id,
+                  name: _nameController.text,
+                  email: _emailController.text,
+                  phone: _phoneController.text,
+                );
 
-              int insertedRows = await _dao.putUser(user);
+                int insertedRows = await _dao.putUser(user);
 
-              if (insertedRows > 0 && context.mounted) context.pop();
+                if (insertedRows > 0 && context.mounted) context.pop();
 
-              setState(() { _loading = false; });
-            },
-            child: _loading ? const CircularProgressIndicator() : const Text('Save')
+                setState(() { _loading = false; });
+              },
+              child: _loading ? const CircularProgressIndicator() : const Text('Save')
+            )
           ),
         )
       ],
