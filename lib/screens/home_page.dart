@@ -4,6 +4,7 @@ import 'package:who_owes_me/db/dao.dart';
 import 'package:who_owes_me/models/realated_pay.dart';
 import 'package:who_owes_me/router/route.dart' as app;
 import 'package:intl/intl.dart';
+import 'package:who_owes_me/widgets/no_data_info.dart';
 
 class HomePage extends StatefulWidget {
   _HomePageState? _state;
@@ -106,6 +107,20 @@ class _HomePageState extends State<HomePage> {
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                     List<RelatedPay>? relatedPays = snapshot.data;
 
+                    if (relatedPays != null && relatedPays.isEmpty){
+                      return Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          NoDataInfo(
+                            padding: const EdgeInsetsGeometry.all(35),
+                            icon: Icons.person,
+                            text: 'No users to show',
+                            showMessage: false,
+                          ),
+                        ],
+                      );
+                    }
+
                     return Column(
                       children: [
                         for (RelatedPay rPay in relatedPays!)
@@ -121,7 +136,17 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
 
-                  return const Text('No pays to show');
+                  return Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      NoDataInfo(
+                        padding: const EdgeInsetsGeometry.all(35),
+                        icon: Icons.person,
+                        text: 'No users to show',
+                        showMessage: false,
+                      ),
+                    ],
+                  );
                 }
               ),
             ),
@@ -140,6 +165,19 @@ class _HomePageState extends State<HomePage> {
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                     List<Map<String, Object?>>? relatedPays = snapshot.data;
 
+                    if (relatedPays != null && relatedPays.isEmpty){
+                      return Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          NoDataInfo(
+                            padding: const EdgeInsetsGeometry.all(35),
+                            text: 'No pays to show',
+                            showMessage: false,
+                          ),
+                        ],
+                      );
+                    }
+
                     return Column(
                       children: [
                         for (Map<String, Object?> rPay in relatedPays!)
@@ -154,7 +192,16 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
 
-                  return const Text('No pays to show');
+                  return Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      NoDataInfo(
+                        padding: const EdgeInsetsGeometry.all(35),
+                        text: 'No pays to show',
+                        showMessage: false,
+                      ),
+                    ],
+                  );
                 }
               ),
             ),
