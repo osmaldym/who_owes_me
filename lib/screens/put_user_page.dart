@@ -16,6 +16,7 @@ class PutUserPage extends StatefulWidget {
 }
 
 class _PutUserPageState extends State<PutUserPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Dao _dao = Dao();
   bool _loading = false;
 
@@ -37,31 +38,38 @@ class _PutUserPageState extends State<PutUserPage> {
       appBar: AppBar(
         title: Text('${ widget.user != null ? 'Edit' : 'New' } user'),
       ),
-      body: Padding(
-        padding: const EdgeInsetsGeometry.symmetric(horizontal: 15),
-        child:  Column(
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Name'
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsetsGeometry.symmetric(horizontal: 15),
+          child:  Column(
+            children: [
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Name'
+                ),
+                controller: _nameController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'This field cannot be empty.';
+                  return null;
+                },
               ),
-              controller: _nameController,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Email'
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Email'
+                ),
+                keyboardType: TextInputType.emailAddress,
+                controller: _emailController,
               ),
-              keyboardType: TextInputType.emailAddress,
-              controller: _emailController,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Phone number'
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Phone number'
+                ),
+                keyboardType: TextInputType.phone,
+                controller: _phoneController,
               ),
-              keyboardType: TextInputType.phone,
-              controller: _phoneController,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       persistentFooterAlignment: AlignmentDirectional.center,
@@ -76,16 +84,18 @@ class _PutUserPageState extends State<PutUserPage> {
               onPressed: _loading ? null : () async {
                 setState(() { _loading = true; });
 
-                User user = User(
-                  id: widget.user?.id,
-                  name: _nameController.text,
-                  email: _emailController.text,
-                  phone: _phoneController.text,
-                );
+                if (_formKey.currentState!.validate()) {
+                  User user = User(
+                    id: widget.user?.id,
+                    name: _nameController.text,
+                    email: _emailController.text,
+                    phone: _phoneController.text,
+                  );
 
-                int insertedRows = await _dao.putUser(user);
+                  int insertedRows = await _dao.putUser(user);
 
-                if (insertedRows > 0 && context.mounted) context.pop();
+                  if (insertedRows > 0 && context.mounted) context.pop();
+                }
 
                 setState(() { _loading = false; });
               },

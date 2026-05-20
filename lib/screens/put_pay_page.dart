@@ -18,6 +18,7 @@ class PutPayPage extends StatefulWidget {
 }
 
 class _PutPayPageState extends State<PutPayPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Dao _dao = Dao();
   DateFormat format = DateFormat("yyyy/MM/dd");
 
@@ -68,65 +69,76 @@ class _PutPayPageState extends State<PutPayPage> {
       appBar: AppBar(
         title: Text('${ widget.pay != null ? 'Edit' : 'New' } pay'),
       ),
-      body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 15),
-        child: Column(
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Title'
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsetsGeometry.symmetric(horizontal: 15),
+          child: Column(
+            children: [
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Title'
+                ),
+                controller: _title,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'This field cannot be empty.';
+                  return null;
+                },
               ),
-              controller: _title,
-            ),
-            FutureBuilder(
-              future: _getAllUsers,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-                
-                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                  List<User>? users = snapshot.data;
+              FutureBuilder(
+                future: _getAllUsers,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+                  
+                  if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                    List<User>? users = snapshot.data;
 
-                  /**
-                   * This cannot be refactorized because the instances of imaginary RelatedPay will be different of
-                   * the users array, throwing error if I can access to the instance of user in RelatedPay.
-                   */
-                  if (widget.pay?.userId != null && _selectedUser == null) {
-                    _selectedUser = users?.firstWhere((user) => user.id == widget.pay!.userId!);
+                    /**
+                     * This cannot be refactorized because the instances of imaginary RelatedPay will be different of
+                     * the users array, throwing error if I can access to the instance of user in RelatedPay.
+                     */
+                    if (widget.pay?.userId != null && _selectedUser == null) {
+                      _selectedUser = users?.firstWhere((user) => user.id == widget.pay!.userId!);
+                    }
+
+                    if (users?.length == 1) _selectedUser = users?.first;
+
+                    return DropdownButtonFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Debtor',
+                      ),
+                      initialValue: _selectedUser,
+                      items: users?.map<DropdownMenuItem<User>>((User user) => DropdownMenuItem(
+                        value: user,
+                        child: Text(user.name ?? 'Unknown user')
+                      )).toList(),
+                      onChanged: (obj) => _selectedUser = obj,
+                    );
                   }
-
-                  if (users?.length == 1) _selectedUser = users?.first;
-
-                  return DropdownButtonFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Debtor',
-                    ),
-                    initialValue: _selectedUser,
-                    items: users?.map<DropdownMenuItem<User>>((User user) => DropdownMenuItem(
-                      value: user,
-                      child: Text(user.name ?? 'Unknown user')
-                    )).toList(),
-                    onChanged: (obj) => _selectedUser = obj,
-                  );
+                  return Text('No users to show');
                 }
-                return Text('No users to show');
-              }
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Amount'
               ),
-              keyboardType: TextInputType.number,
-              controller: _amount,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Date'
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Amount'
+                ),
+                keyboardType: TextInputType.number,
+                controller: _amount,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'This field cannot be empty.';
+                  return null;
+                }
               ),
-              controller: _date,
-              onTap: _pickDate,
-              readOnly: true,
-            ),
-          ],
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Date'
+                ),
+                controller: _date,
+                onTap: _pickDate,
+                readOnly: true,
+              ),
+            ],
+          ),
         ),
       ),
       persistentFooterAlignment: AlignmentDirectional.center,
@@ -141,17 +153,19 @@ class _PutPayPageState extends State<PutPayPage> {
               onPressed: usersEmpty ? null : () async {
                 setState(() { _loading = true; });
 
-                Pay pay = Pay(
-                  id: widget.pay?.id,
-                  title: _title.text,
-                  userId: _selectedUser?.id,
-                  date: _selectedDate,
-                  amount: double.parse(_amount.text),
-                );
+                if (_formKey.currentState!.validate()) {
+                  Pay pay = Pay(
+                    id: widget.pay?.id,
+                    title: _title.text,
+                    userId: _selectedUser?.id,
+                    date: _selectedDate,
+                    amount: double.parse(_amount.text),
+                  );
 
-                int insertedRows = await _dao.putPay(pay);
-                
-                if (insertedRows > 0 && context.mounted) context.pop();
+                  int insertedRows = await _dao.putPay(pay);
+                  
+                  if (insertedRows > 0 && context.mounted) context.pop();
+                }
 
                 setState(() { _loading = false; });
               },
