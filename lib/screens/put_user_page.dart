@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:who_owes_me/db/dao.dart';
 import 'package:who_owes_me/models/user.dart';
+import 'package:who_owes_me/utils/utils.dart';
 
 class PutUserPage extends StatefulWidget {
   User? user;
@@ -23,6 +25,11 @@ class _PutUserPageState extends State<PutUserPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+
+  final _emailRegex = RegExp(
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+  );
+  final _phoneRegex = RegExp(r'^(?:[+0][1-9])?[0-9]{10,12}$');
 
   @override
   void initState() {
@@ -46,7 +53,15 @@ class _PutUserPageState extends State<PutUserPage> {
             children: [
               TextFormField(
                 decoration: const InputDecoration(
-                  labelText: 'Name'
+                  hintText: 'John Due',
+                  hintFadeDuration: Duration(milliseconds: 100),
+                  label: Row(
+                    spacing: 5,
+                    children: [
+                      Text('\u2217', style: TextStyle(color: Colors.red)),
+                      Text('Name'),
+                    ],
+                  ),
                 ),
                 controller: _nameController,
                 validator: (value) {
@@ -56,17 +71,33 @@ class _PutUserPageState extends State<PutUserPage> {
               ),
               TextFormField(
                 decoration: const InputDecoration(
-                  labelText: 'Email'
+                  hintText: 'john.due@whoowesme.com',
+                  hintFadeDuration: Duration(milliseconds: 100),
+                  labelText: 'Email',
                 ),
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
+                validator: (value) {
+                  if ((value != null && value.isNotEmpty) && !_emailRegex.hasMatch(value)) return 'Invalid email.';
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: const InputDecoration(
+                  hintText: '+10000000000',
+                  hintFadeDuration: Duration(milliseconds: 100),
                   labelText: 'Phone number'
                 ),
                 keyboardType: TextInputType.phone,
                 controller: _phoneController,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  PhoneNumberFormatter(),
+                ],
+                validator: (value) {
+                  if ((value != null && value.isNotEmpty) && !_phoneRegex.hasMatch(value)) return 'Invalid phone number.';
+                  return null;
+                },
               ),
             ],
           ),
