@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:who_owes_me/db/dao.dart';
 import 'package:who_owes_me/models/pay.dart';
 import 'package:who_owes_me/models/user.dart';
 import 'package:intl/intl.dart';
+import 'package:who_owes_me/utils/utils.dart';
 
 class PutPayPage extends StatefulWidget {
   Pay? pay;
@@ -77,11 +79,20 @@ class _PutPayPageState extends State<PutPayPage> {
             children: [
               TextFormField(
                 decoration: const InputDecoration(
-                  labelText: 'Title'
+                  hintText: 'Due of John Due',
+                  hintFadeDuration: Duration(milliseconds: 100),
+                  label: Row(
+                    spacing: 5,
+                    children: [
+                      Text('\u2217', style: TextStyle(color: Colors.red),),
+                      Text('Title'),
+                    ],
+                  ),
                 ),
                 controller: _title,
                 validator: (value) {
                   if (value == null || value.isEmpty) return 'This field cannot be empty.';
+                  if (value.length < 4) return 'This field needs to be greater than 4 characters.';
                   return null;
                 },
               ),
@@ -115,17 +126,32 @@ class _PutPayPageState extends State<PutPayPage> {
                       onChanged: (obj) => _selectedUser = obj,
                     );
                   }
-                  return Text('No users to show');
+                  return const Text('No users to show');
                 }
               ),
               TextFormField(
                 decoration: const InputDecoration(
-                  labelText: 'Amount'
+                  prefixText: "\$",
+                  hintText: '1,234.56',
+                  hintFadeDuration: Duration(milliseconds: 100),
+                  label: Row(
+                    spacing: 5,
+                    children: [
+                      Text('\u2217', style: TextStyle(color: Colors.red),),
+                      Text('Amount'),
+                    ],
+                  ),
                 ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9,\.]')),
+                  AmountFormatter(),
+                ],
                 keyboardType: TextInputType.number,
                 controller: _amount,
                 validator: (value) {
                   if (value == null || value.isEmpty) return 'This field cannot be empty.';
+                  if (value == '0') return 'This field cannot be 0.';
+                  if (double.tryParse(value.replaceAll(',', '')) == null) return 'This field needs to be a decimal or int digits';
                   return null;
                 }
               ),
