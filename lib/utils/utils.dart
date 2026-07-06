@@ -1,10 +1,12 @@
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+
 
 class PhoneNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     /// All code commented because I don't know how to implement many formats by it's
-    /// country code, I think is neccessary to use an API or an librar, but that, is
+    /// country code, I think is neccessary to use an API or an library, but that, is
     /// For the future
     
     // if (newValue.text.length > 12 && newValue.text.length < 14) {
@@ -85,5 +87,39 @@ class PhoneNumberFormatter extends TextInputFormatter {
     }
 
     return newValue;
+  }
+}
+
+class AmountFormatter extends TextInputFormatter {
+  NumberFormat formatterDecimal = NumberFormat.decimalPattern('en_US');
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty || newValue.text.contains(RegExp(r'\D'))) return newValue;
+
+    // Only works for #,###.## format, change it later
+    String text = newValue.text.replaceAll(',', '');
+    double? parsed;
+    String amount;
+
+    if (text.contains('.')) {
+      List<String> splitted = text.split('.');
+      String dec = splitted[1];
+      parsed = double.tryParse(splitted[0]);
+
+      if (dec.length > 2) {
+        dec = dec.substring(0, 2);
+      }
+
+      amount = '${formatterDecimal.format(parsed)}.$dec';
+    } else {
+      parsed = double.tryParse(text);
+      amount = formatterDecimal.format(parsed);
+    }
+
+    return TextEditingValue(
+      text: amount,
+      selection: TextSelection.collapsed(offset: amount.length)
+    );
   }
 }
