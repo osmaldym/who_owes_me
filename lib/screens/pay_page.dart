@@ -26,6 +26,7 @@ class DuePage extends StatefulWidget {
 class _DuePageState extends State<DuePage> {
   Dao _dao = Dao();
   DateFormat format = DateFormat("yyyy/MM/dd");
+  NumberFormat nFormat = NumberFormat.decimalPatternDigits(locale: 'en_US', decimalDigits: 2);
 
   Future<List<Pay>>? _getAllPays;
 
@@ -78,7 +79,7 @@ class _DuePageState extends State<DuePage> {
                           spacing: 5,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('\$${pays?[index].amount ?? '0'}'),
+                            Text('\$${nFormat.format(pays?[index].amount ?? 0)}'),
                             PopupMenuButton(
                               icon: const Icon(Icons.more_horiz),
                               itemBuilder: (context) => [
