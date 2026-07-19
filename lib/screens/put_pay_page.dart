@@ -185,11 +185,11 @@ class _PutPayPageState extends State<PutPayPage> {
                     title: _title.text,
                     userId: _selectedUser?.id,
                     date: _selectedDate,
-                    amount: double.parse(_amount.text),
+                    amount: double.tryParse(_amount.text.replaceAll(',', '')),
                   );
 
                   int insertedRows = await _dao.putPay(pay);
-                  
+
                   if (insertedRows > 0 && context.mounted) context.pop();
                 }
 
