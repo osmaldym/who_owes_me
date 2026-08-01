@@ -56,6 +56,8 @@ class Dao {
 
   Future<int> softDeletePay(int id) async => softDelete(DBTable.pay, id);
 
+  Future<int> setPaid(int id, { bool paid = true }) async => update(DBTable.pay, id, { 'paid': paid });
+
   // Related pays
 
   Future<RelatedPay> _toRelatedPay(Pay pay) async => RelatedPay(
