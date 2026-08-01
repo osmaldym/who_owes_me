@@ -71,18 +71,56 @@ class _DuePageState extends State<DuePage> {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        leading: const CircleAvatar(
-                          child: Icon(Icons.money),
+                        leading: Badge(
+                            padding: const EdgeInsets.all(3),
+                            label: Row(
+                              spacing: 3,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  (pays?[index].paid ?? false) ? Icons.attach_money_outlined : Icons.money_off_outlined,
+                                  size: 15,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                            backgroundColor: (pays?[index].paid ?? false) ? Colors.green : Colors.red,
+                            child: const CircleAvatar(
+                              child: Icon(Icons.money),
+                            ),
+                          ),
+                        title: Row(
+                          spacing: 5,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(pays?[index].title ?? 'No Title'),
+                          ],
                         ),
-                        title: Text(pays?[index].title ?? 'No Title'),
                         trailing: Row(
                           spacing: 5,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('\$${nFormat.format(pays?[index].amount ?? 0)}'),
                             PopupMenuButton(
                               icon: const Icon(Icons.more_horiz),
                               itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      int updatedItems = await _dao.setPaid(pays![index].id!, paid: !(pays[index].paid ?? false));
+                                      if (updatedItems > 0) updateState();
+                                      if (context.mounted) context.pop();
+                                    },
+                                    child: Row(
+                                      spacing: 15,
+                                      children: [
+                                        Icon(pays?[index].paid ?? false ? Icons.money_off_outlined : Icons.attach_money_outlined),
+                                        Text(pays?[index].paid ?? false ? 'Unpaid' : 'Paid')
+                                      ],
+                                    ),
+                                  )
+                                ),
                                 PopupMenuItem(
                                   child: TextButton(
                                     onPressed: () {
@@ -142,7 +180,15 @@ class _DuePageState extends State<DuePage> {
                             ),
                           ],
                         ),
-                        subtitle: Text(pays?[index].date != null ? format.format(pays![index].date!) : 'No date'),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(pays?[index].date != null ? format.format(pays![index].date!) : 'No date'),
+                            const Text('•'),
+                            Text('\$${nFormat.format(pays?[index].amount ?? 0)}'),
+                          ],
+                        ),
                       );
                     }
                   );
