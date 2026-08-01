@@ -76,13 +76,13 @@ class Dao {
   // Overviews
 
   Future<double> getTotalDue() async {
-    List<Map<String, Object?>> pays = (await (await _db.get()).rawQuery("SELECT SUM(amount) as total_due FROM ${DBTable.pay} WHERE deleted_at IS NULL"));
+    List<Map<String, Object?>> pays = (await (await _db.get()).rawQuery("SELECT SUM(amount) as total_due FROM ${DBTable.pay} WHERE deleted_at IS NULL AND (paid IS NULL OR paid = 0)"));
     if (pays.isNotEmpty) return pays.first['total_due'] as double;
     return 0;
   }
 
   Future<List<RelatedPay>> getNextPays() async {
-    List<Map<String, Object?>> payMaps = (await (await _db.get()).query(DBTable.pay, limit: 5, orderBy: "date ASC", where: "date IS NOT NULL AND deleted_at IS NULL"));
+    List<Map<String, Object?>> payMaps = (await (await _db.get()).query(DBTable.pay, limit: 5, orderBy: "date ASC", where: "date IS NOT NULL AND deleted_at IS NULL AND (paid IS NULL OR paid = 0)"));
     List<Pay> payList = DBConvertions.responseToPayList(payMaps);
     return _toRelatedPays(payList);
   }
@@ -94,7 +94,7 @@ class Dao {
         SUM(p.amount) as owe_total
       FROM ${DBTable.pay} AS p
       INNER JOIN ${DBTable.user} AS u ON u.id = p.user_id
-      WHERE p.deleted_at IS NULL AND u.deleted_at IS NULL
+      WHERE p.deleted_at IS NULL AND u.deleted_at IS NULL AND (p.paid IS NULL OR p.paid = 0)
       GROUP BY u.id
       ORDER BY owe_total DESC
       LIMIT 5
