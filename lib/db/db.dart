@@ -23,6 +23,7 @@ class DB {
       amount REAL,
       date INTEGER,
       deleted_at INTEGER,
+      paid INTEGER,
       FOREIGN KEY (user_id) REFERENCES ${DBTable.user} (id)
     )
   """

@@ -5,6 +5,7 @@ class Pay extends BaseModel {
   int? userId;
   double? amount;
   DateTime? date;
+  bool? paid;
 
   Pay({
     super.id,
@@ -12,6 +13,7 @@ class Pay extends BaseModel {
     this.title,
     this.amount,
     this.date,
+    this.paid,
     super.deletedAt,
   });
 
@@ -21,6 +23,7 @@ class Pay extends BaseModel {
     'user_id': userId,
     'title': title,
     'amount': amount,
+    'paid': paid,
     'date': date?.microsecondsSinceEpoch,
   };
 

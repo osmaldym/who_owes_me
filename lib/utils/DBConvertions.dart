@@ -31,6 +31,7 @@ class DBConvertions {
       userId: response['user_id'] as int?,
       title: response['title'] as String?,
       amount: response['amount'] as double?,
+      paid: response['paid'] == null ? null : (response['paid'] as int) == 1,
       date: date == null ? null : DateTime.fromMicrosecondsSinceEpoch(date),
       deletedAt: deletedAt == null ? null : DateTime.fromMicrosecondsSinceEpoch(deletedAt),
     );
