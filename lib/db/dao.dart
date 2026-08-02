@@ -52,9 +52,29 @@ class Dao {
   
   Future<int> putPay(Pay pay) => put(DBTable.pay, pay.toMap());
   
-  Future<List<Pay>> getAllPays() async => DBConvertions.responseToPayList(await getAll(DBTable.pay));
+  Future<List<Pay>> getAllPays({ bool all = true, bool? paid }) async {
+    List<bool>? whereArgs;
+
+    String? qWhere;
+
+    if (!all && paid != null) {
+      whereArgs = [paid];
+      qWhere = '(paid = ?';
+      if (!paid) qWhere += ' OR paid IS NULL';
+      qWhere += ')';
+    }
+
+    List<Map<String, Object?>> pays = (await (await _db.get()).query(DBTable.pay, where: qWhere, whereArgs: whereArgs));
+    
+    return DBConvertions.responseToPayList(pays);
+  }
 
   Future<int> softDeletePay(int id) async => softDelete(DBTable.pay, id);
+  
+  Future<List<Pay>> getAllPaysNotPaid() async {
+    List<Map<String, Object?>> pays = (await (await _db.get()).query(DBTable.pay, where: 'paid = 0'));
+    return DBConvertions.responseToPayList(pays);
+  }
 
   Future<int> setPaid(int id, { bool paid = true }) async => update(DBTable.pay, id, { 'paid': paid });
 
