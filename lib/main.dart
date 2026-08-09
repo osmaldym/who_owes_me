@@ -1,47 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:who_owes_me/constants/brightness_mode.dart';
 import 'package:who_owes_me/router/router.dart';
+import 'package:who_owes_me/widgets/main_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final SharedPreferencesAsync prefs = SharedPreferencesAsync();
+  final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
+  final Color appSeedColor = const Color(0xFFFFE32E);
+
+  MyApp({super.key});
+
+  Future<void> _loadPrefs() async {
+    int? brightnessMode = await prefs.getInt('brightness');
+    
+    switch (brightnessMode) {
+      case BrightnessMode.light:
+        themeNotifier.value = ThemeMode.light;
+      case BrightnessMode.dark:
+        themeNotifier.value = ThemeMode.dark;
+      default:
+        themeNotifier.value = ThemeMode.system;
+    }
+  }
+
+  @override
+  StatelessElement createElement() {
+    _loadPrefs();
+    return super.createElement();
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: router,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFFE32E)),
-        filledButtonTheme: FilledButtonThemeData(
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.all(10),
-            textStyle: const TextStyle(
-              fontSize: 18,
-
+    return MainProvider(
+      notifier: themeNotifier,
+      child: ValueListenableBuilder(
+        valueListenable: themeNotifier,
+        builder: (_, brightnessMode, __) => MaterialApp.router(
+          routerConfig: router,
+          title: 'Who Owes Me',
+          theme: ThemeData(
+            brightness: Brightness.light,
+            colorScheme: ColorScheme.fromSeed(seedColor: appSeedColor),
+            filledButtonTheme: FilledButtonThemeData(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(10),
+                textStyle: const TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: appSeedColor,
+              brightness: Brightness.dark,
             ),
           ),
-        ),
-        useMaterial3: true,
-      ),
+          themeMode: brightnessMode,
+        )
+      )
     );
   }
 }
