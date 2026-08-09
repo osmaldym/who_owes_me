@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:who_owes_me/router/route.dart' as app;
 import 'package:who_owes_me/screens/home_page.dart';
 import 'package:who_owes_me/screens/pay_page.dart';
+import 'package:who_owes_me/screens/settings_page.dart';
 import 'package:who_owes_me/screens/user_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -18,6 +19,7 @@ class _MainPageState extends State<MainPage> {
   final UserPage _userPage = UserPage();
   final HomePage _homePage = HomePage();
   final DuePage _duePage = DuePage();
+  final SettingsPage _settingsPage = SettingsPage();
 
   final PageController _pageController = PageController(initialPage: 1);
   int _selectedIndex = 1;
@@ -31,6 +33,7 @@ class _MainPageState extends State<MainPage> {
       _userPage,
       _homePage,
       _duePage,
+      _settingsPage,
     ];
     super.initState();
   }
@@ -48,6 +51,7 @@ class _MainPageState extends State<MainPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.fixed,
         onTap: (index) {
           _pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
         },
@@ -64,9 +68,13 @@ class _MainPageState extends State<MainPage> {
             icon: Icon(Icons.money),
             label: 'Pays',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
         ],
       ),
-      floatingActionButton: _selectedIndex == 1 ? null : FloatingActionButton(
+      floatingActionButton: _selectedIndex == 1 || _selectedIndex == 3 ? null : FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
           switch (_selectedIndex) {
