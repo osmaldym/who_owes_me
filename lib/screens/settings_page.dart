@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:who_owes_me/constants/brightness_mode.dart';
-import 'package:who_owes_me/widgets/main_provider.dart';
+import 'package:who_owes_me/main.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({
@@ -18,9 +18,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   final SharedPreferencesAsync prefs = SharedPreferencesAsync();
 
-  ValueNotifier<ThemeMode>? _updateAndGetSelectedBrightnessMode(BuildContext context) {
-    final ValueNotifier<ThemeMode>? notifier = MainProvider.of(context)?.notifier;
-    final ThemeMode theme = notifier != null ? notifier.value : ThemeMode.system;
+  void _updateSelectedBrightnessMode(BuildContext context) {
+    final ThemeMode? themeMode = MainApp.of(context)?.getThemeMode();
+    final ThemeMode theme = themeMode ?? ThemeMode.system;
 
     switch (theme) {
       case ThemeMode.light:
@@ -34,13 +34,11 @@ class _SettingsPageState extends State<SettingsPage> {
       default:
         _selectedBrightnessMode = BrightnessMode.system;
     }
-
-    return notifier;
   }
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<ThemeMode>? theme = _updateAndGetSelectedBrightnessMode(context);
+    _updateSelectedBrightnessMode(context);
 
     return SingleChildScrollView(
       child: Padding(
@@ -74,17 +72,17 @@ class _SettingsPageState extends State<SettingsPage> {
                 switch (val) {
                   case BrightnessMode.light:
                     await prefs.setInt('brightness', BrightnessMode.light);
-                    theme?.value = ThemeMode.light;
+                    if (context.mounted) MainApp.of(context)?.setThemeMode(ThemeMode.light);
                     break;
 
                   case BrightnessMode.dark:
                     await prefs.setInt('brightness', BrightnessMode.dark);
-                    theme?.value = ThemeMode.dark;
+                    if (context.mounted) MainApp.of(context)?.setThemeMode(ThemeMode.dark);
                     break;
                   
                   default:
                     await prefs.setInt('brightness', BrightnessMode.system);
-                    theme?.value = ThemeMode.system;
+                    if (context.mounted) MainApp.of(context)?.setThemeMode(ThemeMode.system);
                 }
 
                 setState(() {

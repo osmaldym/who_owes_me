@@ -2,71 +2,77 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:who_owes_me/constants/brightness_mode.dart';
 import 'package:who_owes_me/router/router.dart';
-import 'package:who_owes_me/widgets/main_provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MainApp());
 }
 
-class MyApp extends StatelessWidget {
-  final SharedPreferencesAsync prefs = SharedPreferencesAsync();
-  final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
-  final Color appSeedColor = const Color(0xFFFFE32E);
-
-  MyApp({super.key});
-
-  Future<void> _loadPrefs() async {
-    int? brightnessMode = await prefs.getInt('brightness');
-    
-    switch (brightnessMode) {
-      case BrightnessMode.light:
-        themeNotifier.value = ThemeMode.light;
-      case BrightnessMode.dark:
-        themeNotifier.value = ThemeMode.dark;
-      default:
-        themeNotifier.value = ThemeMode.system;
-    }
-  }
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
 
   @override
-  StatelessElement createElement() {
-    _loadPrefs();
-    return super.createElement();
+  State<StatefulWidget> createState() => MainAppState();
+
+  static MainAppState? of(BuildContext context) => context.findAncestorStateOfType<MainAppState>();
+}
+
+class MainAppState extends State<MainApp> {
+  final SharedPreferencesAsync prefs = SharedPreferencesAsync();
+  // final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
+  final Color appSeedColor = const Color(0xFFFFE32E);
+  ThemeMode _themeMode = ThemeMode.system;
+
+  Future<void> loadPrefs() async {
+    int? brightnessMode = await prefs.getInt('brightness');
+
+    setState(() {
+      switch (brightnessMode) {
+        case BrightnessMode.light:
+          _themeMode = ThemeMode.light;
+        case BrightnessMode.dark:
+          _themeMode = ThemeMode.dark;
+        default:
+          _themeMode = ThemeMode.system;
+      }  
+    });
+  }
+
+  void setThemeMode(ThemeMode themeMode) => setState(() => _themeMode = themeMode);
+  ThemeMode getThemeMode() => _themeMode;
+
+  @override
+  void initState() {
+    loadPrefs();
+    return super.initState();
   }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MainProvider(
-      notifier: themeNotifier,
-      child: ValueListenableBuilder(
-        valueListenable: themeNotifier,
-        builder: (_, brightnessMode, __) => MaterialApp.router(
-          routerConfig: router,
-          title: 'Who Owes Me',
-          theme: ThemeData(
-            brightness: Brightness.light,
-            colorScheme: ColorScheme.fromSeed(seedColor: appSeedColor),
-            filledButtonTheme: FilledButtonThemeData(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.all(10),
-                textStyle: const TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-            ),
-            useMaterial3: true,
-          ),
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: appSeedColor,
-              brightness: Brightness.dark,
+    return MaterialApp.router(
+      routerConfig: router,
+      title: 'Who Owes Me',
+      theme: ThemeData(
+        brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSeed(seedColor: appSeedColor),
+        filledButtonTheme: FilledButtonThemeData(
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.all(10),
+            textStyle: const TextStyle(
+              fontSize: 18,
             ),
           ),
-          themeMode: brightnessMode,
-        )
-      )
+        ),
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: appSeedColor,
+          brightness: Brightness.dark,
+        ),
+      ),
+      themeMode: _themeMode,
     );
   }
 }
