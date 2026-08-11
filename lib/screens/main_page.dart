@@ -27,6 +27,8 @@ class _MainPageState extends State<MainPage> {
 
   // This list stores the screens for each tab
   List<Widget>? _screens;
+  List<Widget>? _partialScreens;
+  bool _noBlink = false;
 
   @override
   void initState() {
@@ -36,6 +38,8 @@ class _MainPageState extends State<MainPage> {
       _duePage,
       _settingsPage,
     ];
+
+    _partialScreens = List.filled(_screens!.length, const SizedBox.shrink());
     super.initState();
   }
 
@@ -45,16 +49,21 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(title: const Text('Who Owes Me')),
       body: PageView(
         controller: _pageController,
-        onPageChanged: (index) => setState(() {
-          _selectedIndex = index;
-        }),
-        children: _screens!,
+        onPageChanged: (index) => setState(() =>_selectedIndex = index),
+        children: _noBlink ? _partialScreens! : _screens!,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         type: BottomNavigationBarType.fixed,
-        onTap: (index) {
-          _pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+        onTap: (index) async {
+          _partialScreens![_selectedIndex] = _screens![_selectedIndex];
+          _partialScreens![index] = _screens![index];
+          setState(() => _noBlink = true);
+
+          await _pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+
+          _partialScreens = List.filled(_screens!.length, const SizedBox.shrink());
+          setState(() => _noBlink = false);
         },
         items: [
           BottomNavigationBarItem(
