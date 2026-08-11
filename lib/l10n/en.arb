@@ -1,0 +1,103 @@
+{
+    "title": "Title",
+    "name": "Name",
+    "phoneNumber": "Phone number",
+    "email": "Email",
+    "date": "Date",
+    "debtor": "Debtor",
+    "amount": "Amount",
+    "users": "Users",
+    "home": "Home",
+    "pays": "Pays",
+    "settings": "Settings",
+    "yes": "Yes",
+    "no": "No",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "all": "All",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "theresNoDataToShow": "There's no data to show",
+    "clickTheButtomBelowToAddANewElement": "Click the buttom below to add a new element",
+    "noUsersToShow": "No users to show",
+    "noPaysToShow": "No pays to show",
+    "noTitle": "No title",
+    "noDate": "No date",
+    "noName": "No name",
+    "noEmail": "No email",
+    "areYouSure": "Are you sure?",
+    "newUser": "New user",
+    "editUser": "Edit user",
+    "newPay": "New pay",
+    "editPay": "Edit pay",
+    "nextPays": "Next pays",
+    "unknownUser": "Unknown user",
+    "dueOfJohnDue": "Due of John Due",
+    "thisFieldCannotBeEmpty": "This field cannot be empty",
+    "invalidPhoneNumber": "Invalid phone number.",
+    "invalidEmail": "Invalid email.",
+    "thisFieldNeedsToBeDecimalOrIntDigits": "This field needs to be decimal or int digits.",
+    "usersWhoOweTheMost": "Users who owe the most",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "mode": "Mode",
+    "unknown": "Unknown",
+    "language": "Language",
+
+    "alert_delete_user": "Are you sure to delete the user \"{userName}\"? His dues will be deleted too and this action cannot be undone.",
+    "@alert_delete_user": {
+        "description": "Confirmation to delete an selected user",
+        "placeholders": {
+            "userName": {
+            "type": "String",
+            "example": "Bob"
+            }
+        }
+    },
+
+    "alert_delete_pay": "Are you sure to delete the pay \"{payName}\"? This action cannot be undone.",
+    "@alert_delete_pay": {
+        "description": "Confirmation to delete an selected pay",
+        "placeholders": {
+            "payName": {
+            "type": "String",
+            "example": "Title of the debt"
+            }
+        }
+    },
+
+    "this_field_needs_to_be_greather_than": "This field needs to be greater than {qty} characters.",
+    "@this_field_needs_to_be_greather_than": {
+        "description": "Validation for user set greater than x characters",
+        "placeholders": {
+            "qty": {
+            "type": "int",
+            "example": "5"
+            }
+        }
+    },
+
+    "this_field_cannot_be": "This field cannot be {qty}.",
+    "@this_field_cannot_be": {
+        "description": "Validation for user set different from x text",
+        "placeholders": {
+            "qty": {
+            "type": "String",
+            "example": "0"
+            }
+        }
+    },
+
+    "total_due": "Total due: ${formatedAmount}",
+    "@total_due": {
+        "description": "Set the total due to show in overview",
+        "placeholders": {
+            "formatedAmount": {
+            "type": "String",
+            "example": "1,000"
+            }
+        }
+    }
+}

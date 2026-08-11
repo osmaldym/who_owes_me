@@ -1,0 +1,103 @@
+{
+    "title": "Titulo",
+    "name": "Nombre",
+    "phoneNumber": "Numero de teléfono",
+    "users": "Usuarios",
+    "email": "Correo electrónico",
+    "date": "Fecha",
+    "debtor": "Deudor",
+    "amount": "Monto",
+    "home": "Inicio",
+    "pays": "Pagos",
+    "settings": "Ajustes",
+    "yes": "Si",
+    "no": "No",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "all": "Todo",
+    "paid": "Pagados",
+    "unpaid": "No pagados",
+    "theresNoDataToShow": "No hay datos para mostrar",
+    "clickTheButtomBelowToAddANewElement": "Haz click al botom de debajo para añadir un nuevo elemento",
+    "noUsersToShow": "No hay usuarios para mostrar",
+    "noPaysToShow": "No hay deudas para mostrar",
+    "noTitle": "Sin titulo",
+    "noDate": "Sin fecha",
+    "noName": "Sin nombre",
+    "noEmail": "Sin correo electronico",
+    "areYouSure": "¿Estas seguro?",
+    "newUser": "Nuevo usuario",
+    "editUser": "Editar usuario",
+    "newPay": "Nuevo pago",
+    "editPay": "Editar pago",
+    "nextPays": "Futuros pagos",
+    "unknownUser": "Unknown user",
+    "dueOfJohnDue": "Deuda de John Due",
+    "thisFieldCannotBeEmpty": "Este campo no puede estar vacío.",
+    "invalidPhoneNumber": "Número de telefono invalido.",
+    "invalidEmail": "Correo electrónico invalido.",
+    "thisFieldNeedsToBeDecimalOrIntDigits": "Este campo debe ser decimal o digitos enteros.",
+    "usersWhoOweTheMost": "Usuarios que mas deben",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema",
+    "mode": "Modo",
+    "unknown": "Desconocido",
+    "language": "Idioma",
+
+    "alert_delete_user": "¿Está seguro que desea eliminar el usuario \"{userName}\"? Sus deudas serán eliminadas tambien y esta acción no puede ser reestablecida.",
+    "@alert_delete_user": {
+        "description": "Confirmation to delete an selected user",
+        "placeholders": {
+            "userName": {
+            "type": "String",
+            "example": "Bob"
+            }
+        }
+    },
+
+    "alert_delete_pay": "¿Está seguro que desea eliminar el pago \"{payName}\"? Esta acción no puede ser reestablecida.",
+    "@alert_delete_pay": {
+        "description": "Confirmation to delete an selected pay",
+        "placeholders": {
+            "payName": {
+            "type": "String",
+            "example": "Title of the debt"
+            }
+        }
+    },
+
+    "this_field_needs_to_be_greather_than": "Este campo tiene que tener mas de {qty} caracteres.",
+    "@this_field_needs_to_be_greather_than": {
+        "description": "Validation for user set greater than x characters",
+        "placeholders": {
+            "qty": {
+            "type": "int",
+            "example": "5"
+            }
+        }
+    },
+
+    "this_field_cannot_be": "Este campo no puede ser {qty}.",
+    "@this_field_cannot_be": {
+        "description": "Validation for user set different from x text",
+        "placeholders": {
+            "qty": {
+            "type": "String",
+            "example": "0"
+            }
+        }
+    },
+
+    "total_due": "Deuda total: ${formatedAmount}",
+    "@total_due": {
+        "description": "Set the total due to show in overview",
+        "placeholders": {
+            "formatedAmount": {
+            "type": "String",
+            "example": "1,000"
+            }
+        }
+    }
+}
