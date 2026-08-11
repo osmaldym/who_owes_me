@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:who_owes_me/l10n/app_localizations.dart';
 import 'package:who_owes_me/router/route.dart' as app;
 import 'package:who_owes_me/screens/home_page.dart';
 import 'package:who_owes_me/screens/pay_page.dart';
@@ -55,22 +56,22 @@ class _MainPageState extends State<MainPage> {
         onTap: (index) {
           _pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Users',
+            icon: const Icon(Icons.person),
+            label: AppLocalizations.of(context)!.users,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: const Icon(Icons.home),
+            label: AppLocalizations.of(context)!.home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.money),
-            label: 'Pays',
+            icon: const Icon(Icons.money),
+            label: AppLocalizations.of(context)!.pays,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: const Icon(Icons.settings),
+            label: AppLocalizations.of(context)!.settings,
           ),
         ],
       ),

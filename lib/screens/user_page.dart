@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:who_owes_me/db/dao.dart';
+import 'package:who_owes_me/l10n/app_localizations.dart';
 import 'package:who_owes_me/models/user.dart';
 import 'package:who_owes_me/router/route.dart' as route;
 import 'package:who_owes_me/widgets/no_data_info.dart';
@@ -47,9 +48,9 @@ class UserPageState extends State<UserPage> {
         spacing: 5,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Users',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.users,
+            style: const TextStyle(
               fontSize: 24,
             ),
           ),
@@ -61,7 +62,7 @@ class UserPageState extends State<UserPage> {
               if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                 List<User>? users = snapshot.data;
 
-                if (users != null && users.isEmpty) return NoDataInfo(text: 'No users to show', icon: Icons.person,);
+                if (users != null && users.isEmpty) return NoDataInfo(text: AppLocalizations.of(context)!.noUsersToShow, icon: Icons.person,);
 
                 return Expanded(
                   child: ListView.builder(
@@ -72,8 +73,8 @@ class UserPageState extends State<UserPage> {
                         leading: const CircleAvatar(
                           child: Icon(Icons.person),
                         ),
-                        title: Text(users?[index].name ?? 'No name'),
-                        subtitle: Text(users?[index].email ?? 'No email'),
+                        title: Text(users?[index].name ?? AppLocalizations.of(context)!.noName),
+                        subtitle: Text(users?[index].email ?? AppLocalizations.of(context)!.noEmail),
                         trailing: PopupMenuButton(
                           icon: const Icon(Icons.more_horiz),
                           itemBuilder: (context) => [
@@ -83,11 +84,11 @@ class UserPageState extends State<UserPage> {
                                   context.pop();
                                   context.push(route.Route.usersPut, extra: users?[index]).then((_) => updateState());
                                 },
-                                child: const Row(
+                                child: Row(
                                   spacing: 15,
                                   children: [
-                                    Icon(Icons.edit),
-                                    Text('Edit')
+                                    const Icon(Icons.edit),
+                                    Text(AppLocalizations.of(context)!.edit)
                                   ],
                                 ),
                               )
@@ -99,12 +100,12 @@ class UserPageState extends State<UserPage> {
                                   showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                    title: const Text("Are you sure?"),
-                                      content: Text("Are you sure to delete the user \"${ users?[index].name ?? '' }\"? His dues will be deleted too and this action cannot be undone."),
+                                    title: Text(AppLocalizations.of(context)!.areYouSure),
+                                      content: Text(AppLocalizations.of(context)!.alert_delete_user(users?[index].name ?? '')),
                                       actions: [
                                         TextButton(
                                           onPressed: () => context.pop(),
-                                          child: const Text('No')
+                                          child: Text(AppLocalizations.of(context)!.no)
                                         ),
                                         TextButton(
                                           onPressed: () async {
@@ -112,9 +113,9 @@ class UserPageState extends State<UserPage> {
                                             if (deletedItems > 0) updateState();
                                             if (context.mounted) context.pop();
                                           },
-                                          child: const Text(
-                                            'Yes',
-                                            style: TextStyle(
+                                          child: Text(
+                                            AppLocalizations.of(context)!.yes,
+                                            style: const TextStyle(
                                               color: Colors.red,
                                             ),
                                           )
@@ -123,11 +124,11 @@ class UserPageState extends State<UserPage> {
                                     )
                                   );
                                 },
-                                child: const Row(
+                                child: Row(
                                   spacing: 15,
                                   children: [
-                                    Icon(Icons.delete),
-                                    Text('Delete')
+                                    const Icon(Icons.delete),
+                                    Text(AppLocalizations.of(context)!.delete)
                                   ],
                                 ),
                               )
@@ -142,7 +143,7 @@ class UserPageState extends State<UserPage> {
               }
 
 
-              return NoDataInfo(text: 'No users to show', icon: Icons.person);
+              return NoDataInfo(text: AppLocalizations.of(context)!.noUsersToShow, icon: Icons.person);
             }
           ),
         ],

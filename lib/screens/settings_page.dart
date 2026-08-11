@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:who_owes_me/constants/brightness_mode.dart';
+import 'package:who_owes_me/l10n/app_localizations.dart';
 import 'package:who_owes_me/main.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -14,7 +15,20 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  List<Map<String, String>> langs = [
+    {
+      'lang': 'en',
+      'name': 'English'
+    },
+    {
+      'lang': 'es',
+      'name': 'Español'
+    },
+  ];
+
   int? _selectedBrightnessMode = 0;
+  String? _selectedLang;
+
 
   final SharedPreferencesAsync prefs = SharedPreferencesAsync();
 
@@ -37,6 +51,12 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   @override
+  void initState() {
+    _selectedLang = langs[0]['lang'];
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _updateSelectedBrightnessMode(context);
 
@@ -47,19 +67,19 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 15,
           children: [
-            const Text(
-              'Settings',
-                style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.settings,
+                style: const TextStyle(
                   fontSize: 24,
                 ),
             ),
-            const Row(
+            Row(
               spacing: 10,
               children: [
-                Icon(Icons.brightness_4_outlined),
+                const Icon(Icons.brightness_4_outlined),
                 Text(
-                  'Mode',
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.mode,
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500
                   ),
@@ -89,31 +109,65 @@ class _SettingsPageState extends State<SettingsPage> {
                   _selectedBrightnessMode = val;
                 });
               },
-              child: const Column(
+              child: Column(
                 spacing: 5,
                 children: [
                   RadioListTile(
-                    contentPadding: EdgeInsets.all(0),
+                    contentPadding: const EdgeInsets.all(0),
                     horizontalTitleGap: 0,
                     value: BrightnessMode.light,
-                    title: Text('Light')
+                    title: Text(AppLocalizations.of(context)!.light)
                   ),
                   RadioListTile(
-                    contentPadding: EdgeInsets.all(0),
+                    contentPadding: const EdgeInsets.all(0),
                     horizontalTitleGap: 0,
                     value: BrightnessMode.dark,
-                    title: Text('Dark')
+                    title: Text(AppLocalizations.of(context)!.dark)
                   ),
                   RadioListTile(
-                    contentPadding: EdgeInsets.all(0),
+                    contentPadding: const EdgeInsets.all(0),
                     horizontalTitleGap: 0,
                     value: BrightnessMode.system,
                     selected: true,
-                    title: Text('System')
+                    title: Text(AppLocalizations.of(context)!.system)
                   ),
                 ],
               )
             ),
+            Row(
+              spacing: 10,
+              children: [
+                const Icon(Icons.language),
+                Text(
+                  AppLocalizations.of(context)!.language,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500
+                  ),
+                ),
+              ],
+            ),
+            DropdownButton<String>(
+              isExpanded: true,
+              items: langs.map((lang) => DropdownMenuItem(
+                  value: lang['lang'],
+                  child: Row(
+                    spacing: 5,
+                    children: [
+                      Text(lang['name'] ?? AppLocalizations.of(context)!.unknown)
+                    ],
+                  ),
+                )
+              ).toList(),
+              value: _selectedLang,
+              onChanged: (lang) async {
+                lang ??= 'en';
+
+                prefs.setString('lang', lang);
+                MainApp.of(context)?.setLocale(Locale(lang));
+                setState(() => _selectedLang = lang);
+              }
+            )
           ],
         )
       )

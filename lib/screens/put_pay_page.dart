@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:who_owes_me/db/dao.dart';
+import 'package:who_owes_me/l10n/app_localizations.dart';
 import 'package:who_owes_me/models/pay.dart';
 import 'package:who_owes_me/models/user.dart';
 import 'package:intl/intl.dart';
@@ -69,7 +70,7 @@ class _PutPayPageState extends State<PutPayPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${ widget.pay != null ? 'Edit' : 'New' } pay'),
+        title: Text(widget.pay != null ?  AppLocalizations.of(context)!.editPay :  AppLocalizations.of(context)!.newPay),
       ),
       body: Form(
         key: _formKey,
@@ -78,21 +79,21 @@ class _PutPayPageState extends State<PutPayPage> {
           child: Column(
             children: [
               TextFormField(
-                decoration: const InputDecoration(
-                  hintText: 'Due of John Due',
-                  hintFadeDuration: Duration(milliseconds: 100),
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)!.dueOfJohnDue,
+                  hintFadeDuration: const Duration(milliseconds: 100),
                   label: Row(
                     spacing: 5,
                     children: [
-                      Text('\u2217', style: TextStyle(color: Colors.red),),
-                      Text('Title'),
+                      const Text('\u2217', style: TextStyle(color: Colors.red),),
+                      Text( AppLocalizations.of(context)!.title),
                     ],
                   ),
                 ),
                 controller: _title,
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'This field cannot be empty.';
-                  if (value.length < 4) return 'This field needs to be greater than 4 characters.';
+                  if (value == null || value.isEmpty) return AppLocalizations.of(context)!.thisFieldCannotBeEmpty;
+                  if (value.length < 4) return AppLocalizations.of(context)!.this_field_needs_to_be_greather_than(4);
                   return null;
                 },
               ),
@@ -115,30 +116,30 @@ class _PutPayPageState extends State<PutPayPage> {
                     if (users?.length == 1) _selectedUser = users?.first;
 
                     return DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Debtor',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.debtor,
                       ),
                       initialValue: _selectedUser,
                       items: users?.map<DropdownMenuItem<User>>((User user) => DropdownMenuItem(
                         value: user,
-                        child: Text(user.name ?? 'Unknown user')
+                        child: Text(user.name ?? AppLocalizations.of(context)!.unknownUser)
                       )).toList(),
                       onChanged: (obj) => _selectedUser = obj,
                     );
                   }
-                  return const Text('No users to show');
+                  return Text(AppLocalizations.of(context)!.noUsersToShow);
                 }
               ),
               TextFormField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   prefixText: "\$",
                   hintText: '1,234.56',
-                  hintFadeDuration: Duration(milliseconds: 100),
+                  hintFadeDuration: const Duration(milliseconds: 100),
                   label: Row(
                     spacing: 5,
                     children: [
-                      Text('\u2217', style: TextStyle(color: Colors.red),),
-                      Text('Amount'),
+                      const Text('\u2217', style: TextStyle(color: Colors.red),),
+                      Text(AppLocalizations.of(context)!.amount),
                     ],
                   ),
                 ),
@@ -149,15 +150,15 @@ class _PutPayPageState extends State<PutPayPage> {
                 keyboardType: TextInputType.number,
                 controller: _amount,
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'This field cannot be empty.';
-                  if (value == '0') return 'This field cannot be 0.';
-                  if (double.tryParse(value.replaceAll(',', '')) == null) return 'This field needs to be a decimal or int digits';
+                  if (value == null || value.isEmpty) return AppLocalizations.of(context)!.thisFieldCannotBeEmpty;
+                  if (value == '0') return AppLocalizations.of(context)!.this_field_cannot_be('0');
+                  if (double.tryParse(value.replaceAll(',', '')) == null) return AppLocalizations.of(context)!.thisFieldNeedsToBeDecimalOrIntDigits;
                   return null;
                 }
               ),
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Date'
+                decoration: InputDecoration(
+                  labelText:  AppLocalizations.of(context)!.date
                 ),
                 controller: _date,
                 onTap: _pickDate,
@@ -195,7 +196,7 @@ class _PutPayPageState extends State<PutPayPage> {
 
                 setState(() { _loading = false; });
               },
-              child: _loading ? const CircularProgressIndicator() : const Text('Save')
+              child: _loading ? const CircularProgressIndicator() : Text( AppLocalizations.of(context)!.save)
             )
           ),
         )

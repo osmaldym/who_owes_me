@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:who_owes_me/db/dao.dart';
+import 'package:who_owes_me/l10n/app_localizations.dart';
 import 'package:who_owes_me/models/user.dart';
 import 'package:who_owes_me/utils/utils.dart';
 
@@ -43,7 +44,7 @@ class _PutUserPageState extends State<PutUserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${ widget.user != null ? 'Edit' : 'New' } user'),
+        title: Text(widget.user != null ? AppLocalizations.of(context)!.editUser : AppLocalizations.of(context)!.newUser),
       ),
       body: Form(
         key: _formKey,
@@ -52,41 +53,41 @@ class _PutUserPageState extends State<PutUserPage> {
           child:  Column(
             children: [
               TextFormField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'John Due',
-                  hintFadeDuration: Duration(milliseconds: 100),
+                  hintFadeDuration: const Duration(milliseconds: 100),
                   label: Row(
                     spacing: 5,
                     children: [
-                      Text('\u2217', style: TextStyle(color: Colors.red)),
-                      Text('Name'),
+                      const Text('\u2217', style: TextStyle(color: Colors.red)),
+                      Text(AppLocalizations.of(context)!.name),
                     ],
                   ),
                 ),
                 controller: _nameController,
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'This field cannot be empty.';
+                  if (value == null || value.isEmpty) return AppLocalizations.of(context)!.thisFieldCannotBeEmpty;
                   return null;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'john.due@whoowesme.com',
-                  hintFadeDuration: Duration(milliseconds: 100),
-                  labelText: 'Email',
+                  hintFadeDuration: const Duration(milliseconds: 100),
+                  labelText:  AppLocalizations.of(context)!.email,
                 ),
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
                 validator: (value) {
-                  if ((value != null && value.isNotEmpty) && !_emailRegex.hasMatch(value)) return 'Invalid email.';
+                  if ((value != null && value.isNotEmpty) && !_emailRegex.hasMatch(value)) return AppLocalizations.of(context)!.invalidEmail;
                   return null;
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: '+10000000000',
-                  hintFadeDuration: Duration(milliseconds: 100),
-                  labelText: 'Phone number'
+                  hintFadeDuration: const Duration(milliseconds: 100),
+                  labelText: AppLocalizations.of(context)!.phoneNumber
                 ),
                 keyboardType: TextInputType.phone,
                 controller: _phoneController,
@@ -95,7 +96,7 @@ class _PutUserPageState extends State<PutUserPage> {
                   PhoneNumberFormatter(),
                 ],
                 validator: (value) {
-                  if ((value != null && value.isNotEmpty) && !_phoneRegex.hasMatch(value)) return 'Invalid phone number.';
+                  if ((value != null && value.isNotEmpty) && !_phoneRegex.hasMatch(value)) return AppLocalizations.of(context)!.invalidPhoneNumber;
                   return null;
                 },
               ),
@@ -130,7 +131,7 @@ class _PutUserPageState extends State<PutUserPage> {
 
                 setState(() { _loading = false; });
               },
-              child: _loading ? const CircularProgressIndicator() : const Text('Save')
+              child: _loading ? const CircularProgressIndicator() : Text(AppLocalizations.of(context)!.save)
             )
           ),
         )

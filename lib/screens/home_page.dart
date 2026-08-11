@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:who_owes_me/db/dao.dart';
+import 'package:who_owes_me/l10n/app_localizations.dart';
 import 'package:who_owes_me/models/realated_pay.dart';
 import 'package:who_owes_me/router/route.dart' as app;
 import 'package:intl/intl.dart';
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage> {
 
                 String total = nFormat.format(totalDouble);
                 return Text(
-                    'Total due: \$$total',
+                    AppLocalizations.of(context)!.total_due(total),
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
@@ -78,12 +79,12 @@ class _HomePageState extends State<HomePage> {
               children: [
                 RawChip(
                   avatar: const Icon(Icons.person),
-                  label: const Text('New user'),
+                  label: Text(AppLocalizations.of(context)!.newUser),
                   onPressed: () => context.push(app.Route.usersPut),
                 ),
                 RawChip(
                   avatar: const Icon(Icons.money),
-                  label: const Text('New pay'),
+                  label: Text(AppLocalizations.of(context)!.newPay),
                   onPressed: () => context.push(app.Route.paysPut).then((_) {
                     setState(() {
                       refreshAllFutures();
@@ -92,9 +93,9 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            const Text(
-              'Next pays',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.nextPays,
+              style: const TextStyle(
                 fontSize: 26
               ),
             ),
@@ -114,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                           NoDataInfo(
                             padding: const EdgeInsetsGeometry.all(35),
                             icon: Icons.person,
-                            text: 'No users to show',
+                            text: AppLocalizations.of(context)!.noUsersToShow,
                             showMessage: false,
                           ),
                         ],
@@ -128,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                             leading: const CircleAvatar(
                               child: Icon(Icons.person),
                             ),
-                            title: Text(rPay.user?.name ?? 'Unknown user'),
+                            title: Text(rPay.user?.name ?? AppLocalizations.of(context)!.unknownUser),
                             trailing: Text('\$${nFormat.format(rPay.amount ?? 0)}'),
                             subtitle: rPay.date != null ? Text(format.format(rPay.date!)) : null,
                           )
@@ -142,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                       NoDataInfo(
                         padding: const EdgeInsetsGeometry.all(35),
                         icon: Icons.person,
-                        text: 'No users to show',
+                        text: AppLocalizations.of(context)!.noUsersToShow,
                         showMessage: false,
                       ),
                     ],
@@ -150,9 +151,9 @@ class _HomePageState extends State<HomePage> {
                 }
               ),
             ),
-            const Text(
-              'Users who owe the most',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.usersWhoOweTheMost,
+              style: const TextStyle(
                 fontSize: 26
               ),
             ),
@@ -171,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           NoDataInfo(
                             padding: const EdgeInsetsGeometry.all(35),
-                            text: 'No pays to show',
+                            text: AppLocalizations.of(context)!.noPaysToShow,
                             showMessage: false,
                           ),
                         ],
@@ -185,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                             leading: const CircleAvatar(
                               child: Icon(Icons.person),
                             ),
-                            title: Text(rPay['name'] as String? ?? 'Unknown user'),
+                            title: Text(rPay['name'] as String? ?? AppLocalizations.of(context)!.unknownUser),
                             subtitle: rPay['owe_total'] != null ? Text(nFormat.format(rPay['owe_total'] as double?)) : null,
                           )
                       ],
@@ -197,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       NoDataInfo(
                         padding: const EdgeInsetsGeometry.all(35),
-                        text: 'No pays to show',
+                        text: AppLocalizations.of(context)!.noPaysToShow,
                         showMessage: false,
                       ),
                     ],

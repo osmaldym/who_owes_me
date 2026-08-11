@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:who_owes_me/l10n/app_localizations.dart';
 
 class NoDataInfo extends StatelessWidget {
   String? text;
@@ -31,7 +32,7 @@ class NoDataInfo extends StatelessWidget {
               child: Icon(icon ?? Icons.money_off, size: 38,),
             ),
             Text(
-              text ?? "There's no data to show",
+              text ?? AppLocalizations.of(context)!.theresNoDataToShow,
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w500
@@ -39,7 +40,7 @@ class NoDataInfo extends StatelessWidget {
             ),
             if (showMessage)
               Text(
-                message ?? "Click the button below to add a new element",
+                message ?? AppLocalizations.of(context)!.clickTheButtomBelowToAddANewElement,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 16,

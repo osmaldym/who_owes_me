@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:who_owes_me/db/dao.dart';
+import 'package:who_owes_me/l10n/app_localizations.dart';
 import 'package:who_owes_me/models/pay.dart';
 import 'package:intl/intl.dart';
 import 'package:who_owes_me/router/route.dart' as route;
@@ -68,9 +69,9 @@ class _DuePageState extends State<DuePage> {
           spacing: 5,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Pays',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.pays,
+              style: const TextStyle(
                 fontSize: 24,
               ),
             ),
@@ -78,17 +79,17 @@ class _DuePageState extends State<DuePage> {
               spacing: 5,
               children: [
                 InputChip(
-                  label: const Text('All'),
+                  label: Text(AppLocalizations.of(context)!.all),
                   onSelected: (bool selected) => setFilter(all: selected),
                   selected: _all,
                 ),
                 InputChip(
-                  label: const Text('Paid'),
+                  label: Text(AppLocalizations.of(context)!.paid),
                   onSelected: (bool selected) => setFilter(paid: selected),
                   selected: _paid,
                 ),
                 InputChip(
-                  label: const Text('Unpaid'),
+                  label: Text(AppLocalizations.of(context)!.unpaid),
                   onSelected: (bool selected) => setFilter(unpaid: selected),
                   selected: _unpaid,
                 ),
@@ -102,7 +103,7 @@ class _DuePageState extends State<DuePage> {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                   List<Pay>? pays = snapshot.data;
 
-                  if (pays != null && pays.isEmpty) return NoDataInfo(text: 'No pays to show');
+                  if (pays != null && pays.isEmpty) return NoDataInfo(text: AppLocalizations.of(context)!.noPaysToShow);
 
                   return Expanded(
                     child: ListView.builder(
@@ -134,7 +135,7 @@ class _DuePageState extends State<DuePage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(pays?[index].title ?? 'No Title'),
+                              Text(pays?[index].title ?? AppLocalizations.of(context)!.noTitle),
                             ],
                           ),
                           trailing: Row(
@@ -155,7 +156,7 @@ class _DuePageState extends State<DuePage> {
                                         spacing: 15,
                                         children: [
                                           Icon(pays?[index].paid ?? false ? Icons.money_off_outlined : Icons.attach_money_outlined),
-                                          Text(pays?[index].paid ?? false ? 'Unpaid' : 'Paid')
+                                          Text(pays?[index].paid ?? false ? AppLocalizations.of(context)!.unpaid : AppLocalizations.of(context)!.paid)
                                         ],
                                       ),
                                     )
@@ -182,12 +183,12 @@ class _DuePageState extends State<DuePage> {
                                         showDialog(
                                           context: context,
                                           builder: (context) => AlertDialog(
-                                          title: const Text("Are you sure?"),
-                                            content: Text("Are you sure to delete the pay \"${ pays?[index].title ?? '' }\"? This action cannot be undone."),
+                                          title: Text(AppLocalizations.of(context)!.areYouSure),
+                                            content: Text(AppLocalizations.of(context)!.alert_delete_user(pays?[index].title ?? '')),
                                             actions: [
                                               TextButton(
                                                 onPressed: () => context.pop(),
-                                                child: const Text('No')
+                                                child: Text(AppLocalizations.of(context)!.no)
                                               ),
                                               TextButton(
                                                 onPressed: () async {
@@ -195,9 +196,9 @@ class _DuePageState extends State<DuePage> {
                                                   if (deletedItems > 0) updateState();
                                                   if (context.mounted) context.pop();
                                                 },
-                                                child: const Text(
-                                                  'Yes',
-                                                  style: TextStyle(
+                                                child: Text(
+                                                  AppLocalizations.of(context)!.yes,
+                                                  style: const TextStyle(
                                                     color: Colors.red,
                                                   ),
                                                 )
@@ -206,11 +207,11 @@ class _DuePageState extends State<DuePage> {
                                           )
                                         );
                                       },
-                                      child: const Row(
+                                      child: Row(
                                         spacing: 15,
                                         children: [
-                                          Icon(Icons.delete),
-                                          Text('Delete')
+                                          const Icon(Icons.delete),
+                                          Text(AppLocalizations.of(context)!.delete)
                                         ],
                                       ),
                                     )
@@ -223,7 +224,7 @@ class _DuePageState extends State<DuePage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(pays?[index].date != null ? format.format(pays![index].date!) : 'No date'),
+                              Text(pays?[index].date != null ? format.format(pays![index].date!) : AppLocalizations.of(context)!.noDate),
                               const Text('•'),
                               Text('\$${nFormat.format(pays?[index].amount ?? 0)}'),
                             ],
@@ -234,7 +235,7 @@ class _DuePageState extends State<DuePage> {
                   );
                 }
 
-                return NoDataInfo(text: 'No pays to show');
+                return NoDataInfo(text: AppLocalizations.of(context)!.noPaysToShow);
               }
             ),
           ]
