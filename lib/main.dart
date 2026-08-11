@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:who_owes_me/constants/brightness_mode.dart';
+import 'package:who_owes_me/l10n/app_localizations.dart';
 import 'package:who_owes_me/router/router.dart';
 
 void main() {
@@ -18,9 +19,9 @@ class MainApp extends StatefulWidget {
 
 class MainAppState extends State<MainApp> {
   final SharedPreferencesAsync prefs = SharedPreferencesAsync();
-  // final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
   final Color appSeedColor = const Color(0xFFFFE32E);
   ThemeMode _themeMode = ThemeMode.system;
+  Locale _locale = const Locale('en');
 
   Future<void> loadPrefs() async {
     int? brightnessMode = await prefs.getInt('brightness');
@@ -40,6 +41,8 @@ class MainAppState extends State<MainApp> {
   void setThemeMode(ThemeMode themeMode) => setState(() => _themeMode = themeMode);
   ThemeMode getThemeMode() => _themeMode;
 
+  void setLocale(Locale locale) => setState(() => _locale = locale);
+
   @override
   void initState() {
     loadPrefs();
@@ -50,6 +53,9 @@ class MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: _locale,
       routerConfig: router,
       title: 'Who Owes Me',
       theme: ThemeData(
