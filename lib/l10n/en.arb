@@ -17,6 +17,8 @@
     "delete": "Delete",
     "all": "All",
     "paid": "Paid",
+    "settled": "Settled",
+    "unpaids": "Unpaid",
     "unpaid": "Unpaid",
     "theresNoDataToShow": "There's no data to show",
     "clickTheButtomBelowToAddANewElement": "Click the buttom below to add a new element",

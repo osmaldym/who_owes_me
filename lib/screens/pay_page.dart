@@ -89,7 +89,7 @@ class _DuePageState extends State<DuePage> {
                   selected: _paid,
                 ),
                 InputChip(
-                  label: Text(AppLocalizations.of(context)!.unpaid),
+                  label: Text(AppLocalizations.of(context)!.unpaids),
                   onSelected: (bool selected) => setFilter(unpaid: selected),
                   selected: _unpaid,
                 ),
@@ -156,7 +156,7 @@ class _DuePageState extends State<DuePage> {
                                         spacing: 15,
                                         children: [
                                           Icon(pays?[index].paid ?? false ? Icons.money_off_outlined : Icons.attach_money_outlined),
-                                          Text(pays?[index].paid ?? false ? AppLocalizations.of(context)!.unpaid : AppLocalizations.of(context)!.paid)
+                                          Text(pays?[index].paid ?? false ? AppLocalizations.of(context)!.unpaid : AppLocalizations.of(context)!.settled)
                                         ],
                                       ),
                                     )
@@ -167,11 +167,11 @@ class _DuePageState extends State<DuePage> {
                                         context.pop();
                                         context.push(route.Route.paysPut, extra: pays?[index]).then((_) => updateState());
                                       },
-                                      child: const Row(
+                                      child: Row(
                                         spacing: 15,
                                         children: [
-                                          Icon(Icons.edit),
-                                          Text('Edit')
+                                          const Icon(Icons.edit),
+                                          Text(AppLocalizations.of(context)!.edit)
                                         ],
                                       ),
                                     )
