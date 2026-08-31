@@ -116,20 +116,22 @@ class _SettingsPageState extends State<SettingsPage> {
                     contentPadding: const EdgeInsets.all(0),
                     horizontalTitleGap: 0,
                     value: BrightnessMode.light,
-                    title: Text(AppLocalizations.of(context)!.light)
+                    title: Text(AppLocalizations.of(context)!.light),
+                    selected: _selectedBrightnessMode == BrightnessMode.light,
                   ),
                   RadioListTile(
                     contentPadding: const EdgeInsets.all(0),
                     horizontalTitleGap: 0,
                     value: BrightnessMode.dark,
-                    title: Text(AppLocalizations.of(context)!.dark)
+                    title: Text(AppLocalizations.of(context)!.dark),
+                    selected: _selectedBrightnessMode == BrightnessMode.dark,
                   ),
                   RadioListTile(
                     contentPadding: const EdgeInsets.all(0),
                     horizontalTitleGap: 0,
                     value: BrightnessMode.system,
-                    selected: true,
-                    title: Text(AppLocalizations.of(context)!.system)
+                    selected: _selectedBrightnessMode == BrightnessMode.system,
+                    title: Text(AppLocalizations.of(context)!.system),
                   ),
                 ],
               )
